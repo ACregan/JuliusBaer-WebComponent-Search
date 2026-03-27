@@ -13,21 +13,27 @@
     </style>
   </head>
   <body>
+    <!-- HTML WAY-->
+    <!-- <script
+    type="module"
+    src="../dist/src/juliusbaer-webcomponent-search.js"
+    ></script> -->
+    <!-- <juliusbaer-webcomponent-search
+    search-data='[{"name": "yomama"}, {"name": "yopapa"}]'
+    ></juliusbaer-webcomponent-search> -->
+
+    <!-- JS SCRIPT WAY-->
     <div id="demo"></div>
 
     <script type="module">
       import { html, render } from 'lit';
       import '../dist/src/juliusbaer-webcomponent-search.js';
+      // import accountData from '../dist/src/data/accounts.js';
+      import transactionData from '../dist/src/data/transactions.js';
 
-      // const header = 'Hello World!';
-      // <juliusbaer-webcomponent-search .header=${header}>
       render(
         html`
-          <juliusbaer-webcomponent-search
-            .header=${"William Gibson's"}
-            .counter=${0}
-          >
-            some light-dom
+          <juliusbaer-webcomponent-search .data=${transactionData}>
           </juliusbaer-webcomponent-search>
         `,
         document.querySelector('#demo'),

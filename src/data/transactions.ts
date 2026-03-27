@@ -1,0 +1,469 @@
+interface Person {
+  first_name: string;
+  last_name: string;
+  account_number: number;
+}
+
+interface Transaction {
+  id: number;
+  currency: string;
+  amount: number;
+  from: Person;
+  to: Person;
+}
+
+const TRANSACTIONS: Transaction[] = [
+  {
+    id: 1,
+    currency: 'BDT',
+    amount: 5693.67,
+    from: {
+      first_name: 'Cleavland',
+      last_name: 'Fearon',
+      account_number: 74952200,
+    },
+    to: {
+      first_name: 'Jimmie',
+      last_name: 'Cossins',
+      account_number: 22882394,
+    },
+  },
+  {
+    id: 2,
+    currency: 'PHP',
+    amount: 7434.25,
+    from: {
+      first_name: 'James',
+      last_name: 'Copping',
+      account_number: 83309824,
+    },
+    to: {
+      first_name: 'Angelo',
+      last_name: 'Switland',
+      account_number: 87015328,
+    },
+  },
+  {
+    id: 3,
+    currency: 'CNY',
+    amount: 9291.9,
+    from: {
+      first_name: 'Ruperto',
+      last_name: 'Laver',
+      account_number: 88168059,
+    },
+    to: {
+      first_name: 'Corabel',
+      last_name: 'McIlherran',
+      account_number: 37640067,
+    },
+  },
+  {
+    id: 4,
+    currency: 'BRL',
+    amount: 3780.74,
+    from: {
+      first_name: 'Elyn',
+      last_name: 'Fruchter',
+      account_number: 11498011,
+    },
+    to: {
+      first_name: 'Odell',
+      last_name: 'Dable',
+      account_number: 33073899,
+    },
+  },
+  {
+    id: 5,
+    currency: 'CNY',
+    amount: 4962.52,
+    from: {
+      first_name: 'Jehu',
+      last_name: 'Ternent',
+      account_number: 7147125,
+    },
+    to: {
+      first_name: 'Simone',
+      last_name: 'Matijasevic',
+      account_number: 42739975,
+    },
+  },
+  {
+    id: 6,
+    currency: 'RUB',
+    amount: 7280.45,
+    from: {
+      first_name: 'Borg',
+      last_name: 'Heliot',
+      account_number: 66895952,
+    },
+    to: {
+      first_name: 'Timothea',
+      last_name: 'Filipyev',
+      account_number: 67624996,
+    },
+  },
+  {
+    id: 7,
+    currency: 'BGN',
+    amount: 2678.09,
+    from: {
+      first_name: 'Kendre',
+      last_name: 'Burns',
+      account_number: 39880576,
+    },
+    to: {
+      first_name: 'West',
+      last_name: 'Macek',
+      account_number: 99108154,
+    },
+  },
+  {
+    id: 8,
+    currency: 'JPY',
+    amount: 8127.2,
+    from: {
+      first_name: 'Wylma',
+      last_name: 'Clancy',
+      account_number: 92003376,
+    },
+    to: {
+      first_name: 'Cathe',
+      last_name: 'Kaemena',
+      account_number: 11161600,
+    },
+  },
+  {
+    id: 9,
+    currency: 'EUR',
+    amount: 8564.66,
+    from: {
+      first_name: 'Edna',
+      last_name: 'Zettoi',
+      account_number: 20866930,
+    },
+    to: {
+      first_name: 'Allison',
+      last_name: 'Burnard',
+      account_number: 4837804,
+    },
+  },
+  {
+    id: 10,
+    currency: 'IDR',
+    amount: 6729.72,
+    from: {
+      first_name: 'Lurleen',
+      last_name: 'Candey',
+      account_number: 42098559,
+    },
+    to: {
+      first_name: 'Conrad',
+      last_name: 'Eldrid',
+      account_number: 87609507,
+    },
+  },
+  {
+    id: 11,
+    currency: 'THB',
+    amount: 6671.21,
+    from: {
+      first_name: 'Lydon',
+      last_name: 'Assel',
+      account_number: 37288644,
+    },
+    to: {
+      first_name: 'Gerty',
+      last_name: 'Whopples',
+      account_number: 5488994,
+    },
+  },
+  {
+    id: 12,
+    currency: 'BAM',
+    amount: 9991.84,
+    from: {
+      first_name: 'Parrnell',
+      last_name: 'Blanchet',
+      account_number: 79878803,
+    },
+    to: {
+      first_name: 'Milena',
+      last_name: 'Curson',
+      account_number: 79478954,
+    },
+  },
+  {
+    id: 13,
+    currency: 'ARS',
+    amount: 1567.28,
+    from: {
+      first_name: 'Elyse',
+      last_name: 'Grishaev',
+      account_number: 28152193,
+    },
+    to: {
+      first_name: 'Prudy',
+      last_name: 'Vlasenko',
+      account_number: 51630443,
+    },
+  },
+  {
+    id: 14,
+    currency: 'RUB',
+    amount: 3354.61,
+    from: {
+      first_name: 'Torey',
+      last_name: 'Olivello',
+      account_number: 54088519,
+    },
+    to: {
+      first_name: 'Olivie',
+      last_name: 'Love',
+      account_number: 19046327,
+    },
+  },
+  {
+    id: 15,
+    currency: 'IDR',
+    amount: 6997.55,
+    from: {
+      first_name: 'Janela',
+      last_name: 'Simionescu',
+      account_number: 37446768,
+    },
+    to: {
+      first_name: 'Lara',
+      last_name: 'Suffe',
+      account_number: 58737919,
+    },
+  },
+  {
+    id: 16,
+    currency: 'RUB',
+    amount: 5226.33,
+    from: {
+      first_name: 'Guthrie',
+      last_name: 'Raddon',
+      account_number: 19413809,
+    },
+    to: {
+      first_name: 'Puff',
+      last_name: 'Mc Meekan',
+      account_number: 20154337,
+    },
+  },
+  {
+    id: 17,
+    currency: 'CNY',
+    amount: 7635.57,
+    from: {
+      first_name: 'Abran',
+      last_name: 'Langlands',
+      account_number: 570612,
+    },
+    to: {
+      first_name: 'Marcy',
+      last_name: 'Coldrick',
+      account_number: 28858677,
+    },
+  },
+  {
+    id: 18,
+    currency: 'ARS',
+    amount: 6072.61,
+    from: {
+      first_name: 'Marline',
+      last_name: 'Ludlam',
+      account_number: 73538911,
+    },
+    to: {
+      first_name: 'Robina',
+      last_name: 'Hatcher',
+      account_number: 40675498,
+    },
+  },
+  {
+    id: 19,
+    currency: 'RUB',
+    amount: 6092.78,
+    from: {
+      first_name: 'Kalli',
+      last_name: 'Scroggie',
+      account_number: 95038011,
+    },
+    to: {
+      first_name: 'Hailee',
+      last_name: 'Busfield',
+      account_number: 55063262,
+    },
+  },
+  {
+    id: 20,
+    currency: 'CNY',
+    amount: 132.82,
+    from: {
+      first_name: 'Nissie',
+      last_name: 'Pilpovic',
+      account_number: 26634459,
+    },
+    to: {
+      first_name: 'Winne',
+      last_name: 'Lippiello',
+      account_number: 69661015,
+    },
+  },
+  {
+    id: 21,
+    currency: 'EUR',
+    amount: 2955.27,
+    from: {
+      first_name: 'Hazel',
+      last_name: 'Insull',
+      account_number: 70095407,
+    },
+    to: {
+      first_name: 'Laraine',
+      last_name: 'Gabbidon',
+      account_number: 10168074,
+    },
+  },
+  {
+    id: 22,
+    currency: 'IDR',
+    amount: 5255.91,
+    from: {
+      first_name: 'Dana',
+      last_name: 'Rennox',
+      account_number: 2664404,
+    },
+    to: {
+      first_name: 'Harwell',
+      last_name: 'Rowberry',
+      account_number: 8554934,
+    },
+  },
+  {
+    id: 23,
+    currency: 'PEN',
+    amount: 5308.62,
+    from: {
+      first_name: 'Sammie',
+      last_name: 'Sparway',
+      account_number: 94955115,
+    },
+    to: {
+      first_name: 'Asia',
+      last_name: 'Joannic',
+      account_number: 80480673,
+    },
+  },
+  {
+    id: 24,
+    currency: 'IDR',
+    amount: 3511.11,
+    from: {
+      first_name: 'Laraine',
+      last_name: 'Gabbidon',
+      account_number: 10168074,
+    },
+    to: {
+      first_name: 'Hazel',
+      last_name: 'Insull',
+      account_number: 70095407,
+    },
+  },
+  {
+    id: 25,
+    currency: 'EUR',
+    amount: 4993.09,
+    from: {
+      first_name: 'Laraine',
+      last_name: 'Gabbidon',
+      account_number: 10168074,
+    },
+    to: {
+      first_name: 'Asia',
+      last_name: 'Joannic',
+      account_number: 80480673,
+    },
+  },
+  {
+    id: 26,
+    currency: 'NIO',
+    amount: 2763.41,
+    from: {
+      first_name: 'Zak',
+      last_name: 'Heinsen',
+      account_number: 80207136,
+    },
+    to: {
+      first_name: 'Ingrim',
+      last_name: 'Sponton',
+      account_number: 10266135,
+    },
+  },
+  {
+    id: 27,
+    currency: 'CNY',
+    amount: 1277.7,
+    from: {
+      first_name: 'Sammie',
+      last_name: 'Sparway',
+      account_number: 94955115,
+    },
+    to: {
+      first_name: 'Gillie',
+      last_name: 'Cornels',
+      account_number: 13145461,
+    },
+  },
+  {
+    id: 28,
+    currency: 'EUR',
+    amount: 4401.05,
+    from: {
+      first_name: 'Jase',
+      last_name: 'Spincke',
+      account_number: 81280400,
+    },
+    to: {
+      first_name: 'Ingrim',
+      last_name: 'Sponton',
+      account_number: 10266135,
+    },
+  },
+  {
+    id: 29,
+    currency: 'CZK',
+    amount: 4370.29,
+    from: {
+      first_name: 'Zak',
+      last_name: 'Heinsen',
+      account_number: 80207136,
+    },
+    to: {
+      first_name: 'Robina',
+      last_name: 'Hatcher',
+      account_number: 40675498,
+    },
+  },
+  {
+    id: 30,
+    currency: 'PLN',
+    amount: 7994.48,
+    from: {
+      first_name: 'Marline',
+      last_name: 'Ludlam',
+      account_number: 73538911,
+    },
+    to: {
+      first_name: 'Marcy',
+      last_name: 'Coldrick',
+      account_number: 28858677,
+    },
+  },
+];
+
+export default TRANSACTIONS;
+export type { Transaction, Person };

@@ -1,5 +1,9 @@
 import { html, css, LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+
+// import ACCOUNTS from './data/accounts.js';
+import TRANSACTIONS from './data/transactions.js';
+import { findValueInNestedObject } from './utils/utilities.js';
 
 export class JuliusbaerWebcomponentSearch extends LitElement {
   static styles = css`
@@ -10,18 +14,32 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     }
   `;
 
-  @property({ type: String }) header = 'Hey there';
+  @query('#search-input')
+  input!: HTMLInputElement;
 
-  @property({ type: Number }) counter = 100;
+  @property({ type: Array, attribute: 'search-data' }) data = TRANSACTIONS;
 
-  __increment() {
-    this.counter += 1;
+  submitSearch() {
+    console.log('SUBMITTED FOR SEARCH', this.input.value);
+    console.log('DATA TO BE SEARCHED', this.data);
+
+    const result: typeof this.data = [];
+    this.data.forEach(dataItem => {
+      const hasData = findValueInNestedObject(dataItem, this.input.value);
+      if (hasData) {
+        result.push(dataItem);
+      }
+    });
+
+    console.log('RESULTS', result);
+
+    this.input.value = '';
   }
 
   render() {
     return html`
-      <h2>${this.header} COUNT: ${this.counter}!</h2>
-      <button @click=${this.__increment}>increment</button>
+      <input id="search-input" type="search" />
+      <button @click=${this.submitSearch}>SEARCH</button>
     `;
   }
 }
