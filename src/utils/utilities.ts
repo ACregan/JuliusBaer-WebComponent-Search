@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, TemplateResult } from 'lit';
 
 function findValueInNestedObject(
   data: any[] | object,
@@ -46,13 +46,26 @@ function isNumberOrString(itemToTest: any) {
   return typeof itemToTest === 'number' || typeof itemToTest === 'string';
 }
 
-function valueWithHighlighting(value: string, searchString: string) {
-  const splitValue = value.split(new RegExp(searchString, 'ig'));
-  console.log('splitValue', splitValue);
-  return splitValue.length > 1
-    ? html`${splitValue[0]}<span class="highlight">${searchString}</span
-        >${splitValue[1]}`
-    : html`${splitValue[0]}`;
+function valueWithHighlighting(
+  text: string,
+  substring: string,
+): TemplateResult {
+  if (!substring) return html`${text}`;
+  const regex = new RegExp(
+    substring.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+    'gi',
+  );
+  const matches = [...text.matchAll(regex)];
+  if (matches.length === 0) return html`${text}`;
+  let lastIndex = 0;
+  const parts: (string | TemplateResult)[] = [];
+  for (const match of matches) {
+    parts.push(text.slice(lastIndex, match.index));
+    parts.push(html`<span class="highlight">${match[0]}</span>`);
+    lastIndex = match.index! + match[0].length;
+  }
+  parts.push(text.slice(lastIndex));
+  return html`${parts}`;
 }
 
 export { findValueInNestedObject, isNumberOrString, valueWithHighlighting };

@@ -33,7 +33,10 @@
 
       render(
         html`
-          <juliusbaer-webcomponent-search .data=${transactionData}>
+          <juliusbaer-webcomponent-search
+            .data=${transactionData}
+            .placeholder="What can I help you with?"
+          >
           </juliusbaer-webcomponent-search>
         `,
         document.querySelector('#demo'),

@@ -1,5 +1,18 @@
 # JuliusBaer-WebComponent-Search
 
+## Requirements Checklist
+
+- [x] Search Input by string
+- [x] Results Dropdown
+- [x] ... With Search Term Highlighting.
+- [x] ... With Placeholder Text.
+- [ ] ... With Multiple Selectable Results (checkboxes?).
+- [ ] ... With Keyboard Navigation.
+- [ ] ... With Results Being Keyboard Navigatable.
+- [ ] ... With Results Being Displayed above Search facility if space below is not sufficient.
+- [ ] Label
+- [ ] Label
+
 ## Purpose
 
 This repo contains a Web Component designed to enable a user to search for specific values amongst data, filter amongst the results and provide user interaction such as selection of results. It should provide keyboard navigation, be mobile friendly, compatible with screen-reader tech and provide clear visual feedback to the user.
