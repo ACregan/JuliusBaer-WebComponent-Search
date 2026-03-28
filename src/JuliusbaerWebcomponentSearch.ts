@@ -14,7 +14,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     :host {
       --ghost-white: #fffaff;
       --lavender: #e6e6e6;
-      --thistle: #cbc0d3;
+      --thistle: #c5c5c5;
       --charcoal: #524f53;
       --cerulean: #2d728f;
       --cool-sky: #35a7ff;
@@ -60,8 +60,15 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       height: 40px;
       font-weight: 600;
       padding: 0 10px;
-      border: 1px solid var(--thistle);
+      border: 1px solid var(--cerulean);
       border-radius: 4px;
+      box-sizing: border-box;
+      background: var(--cool-sky);
+      color: var(--ghost-white);
+      cursor: pointer;
+    }
+    #submit-button:active {
+      background: var(--cerulean);
     }
     #results-container {
       border-radius: 0 0 10px 10px;
@@ -86,6 +93,10 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       margin-bottom: 0;
       border-radius: 2px 2px 5px 5px;
     }
+    .result-checkbox {
+      margin: 0 15px 0 10px;
+      border: 5px solid var(--charcoal);
+    }
     .result-cell {
       order: 0;
       flex: 1 1 80px;
@@ -100,6 +111,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       font-size: 11px;
       color: var(--charcoal);
       text-transform: capitalize;
+      user-select: none;
     }
     .result-cell-value {
       font-weight: 600;
@@ -168,7 +180,16 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     );
     return isEntryKeyString
       ? html`${resultCells}`
-      : html`<div class="result-item">${resultCells}</div>`;
+      : html`
+          <div class="result-item">
+            <input
+              class="result-checkbox"
+              type="checkbox"
+              .value=${rowData.id}
+            />
+            ${resultCells}
+          </div>
+        `;
   }
 
   render() {
