@@ -2,16 +2,22 @@
 
 ## Requirements Checklist
 
-- [x] Search Input by string
-- [x] Results Dropdown
+- [x] Search Input by string ...
+- [x] ... only start search after 2 chars or more are entered in search
+- [x] ... and refine search on-change search input
+- [x] Results Dropdown ...
 - [x] ... With Search Term Highlighting.
 - [x] ... With Placeholder Text.
-- [ ] ... With Multiple Selectable Results (checkboxes?).
-- [ ] ... With Keyboard Navigation.
-- [ ] ... With Results Being Keyboard Navigatable.
+- [x] ... With Multiple Selectable Results (checkboxes?).
+- [x] ... With Keyboard Navigation.
+- [x] ... With Results Being Keyboard Navigatable.
 - [ ] ... With Results Being Displayed above Search facility if space below is not sufficient.
-- [ ] Label
-- [ ] Label
+- [x] Dark Mode...
+- [x] ... determined by browser
+- [ ] ... but can be overriden by attribute
+- [ ] Ensure responsive design patterns are adhered to
+- [ ] Test Suite
+- [ ] Storybook Scenarios
 
 ## Purpose
 
@@ -22,6 +28,12 @@ The specification for this web component was provided by Julius Baer as part of 
 ## Usage
 
 ## Parameters
+
+data: an array of objects containing the data you wish to search. Requires an id(number) but other than that, the data can be any number of key/value pairs.
+
+label: a text label that sits above the search window to indicate what data the search facility will search through.
+
+placeholder: a text label to act as a short written indicator to prompt the user to use the search input.
 
 ---
 
@@ -39,7 +51,11 @@ SOURCE: https://medium.com/@mz.ebrahimi/a-comparative-analysis-of-stencil-core-a
 
 ## Testing
 
-// TODO: Merge with open web component standard generated readme.md (below)
+---
+
+---
+
+// TODO: Merge the content below (from open web component standard generated readme.md) with the readme above
 
 # \<juliusbaer-webcomponent-search>
 

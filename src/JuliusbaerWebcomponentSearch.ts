@@ -1,8 +1,5 @@
 import { html, css, LitElement } from 'lit';
-import { property, query } from 'lit/decorators.js';
-
-// import ACCOUNTS from './data/accounts.js';
-// import TRANSACTIONS from './data/transactions.js';
+import { property } from 'lit/decorators.js';
 import {
   findValueInNestedObject,
   isNumberOrString,
@@ -19,16 +16,25 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       --cerulean: #2d728f;
       --cool-sky: #35a7ff;
       --banana: #ffe74c;
+
+      --grey: #878787;
+      --dark-grey: #595959;
+      --darker-grey: #404040;
+
+      --container-background: var(--lavender);
+      --container-border: var(--thistle);
+
       display: block;
       padding: 25px;
       color: var(--charcoal, #000);
-
       font-family: Verdana, Geneva, Tahoma, Helvetica, sans-serif;
     }
     #root-container {
       width: 100%;
+      margin-top: 20px;
     }
     #search-container {
+      position: relative;
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -38,19 +44,31 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       width: 100%;
       box-sizing: border-box;
       padding: 10px;
-      background: var(--lavender);
+      background: var(--container-background);
       border-radius: 10px;
 
-      border: 5px solid var(--thistle);
+      border: 5px solid var(--container-border);
+    }
+    #search-label {
+      position: absolute;
+      top: -25px;
+      left: 6px;
+      padding: 5px 5px 0 5px;
+      border-radius: 10px 10px 0 0;
+      border: 5px solid var(--container-border);
+      border-bottom: 0;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--container-background);
+      color: var(--charcoal);
     }
     #search-input {
       order: 0;
       flex: 1 1 auto;
       align-self: auto;
       height: 40px;
-      margin-right: 10px;
       padding: 0 10px;
-      border: 1px solid var(--thistle);
+      border: 1px solid var(--container-border);
       border-radius: 4px;
     }
     #submit-button {
@@ -73,14 +91,15 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     #results-container {
       border-radius: 0 0 10px 10px;
       padding: 10px;
-      border: 5px solid var(--thistle);
+      border: 5px solid var(--container-border);
       border-top: none;
-      background: var(--lavender);
-      transform: translateY(-10px);
+      background: var(--container-background);
+      transform: translateY(-13px);
     }
     .result-item {
-      border: 1px solid var(--thistle);
-      margin-bottom: 2px;
+      border-radius: 3px;
+      border: 1px solid var(--container-border);
+      margin-bottom: 3px;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
@@ -88,11 +107,20 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       align-content: stretch;
       align-items: stretch;
       padding: 5px;
+      cursor: pointer;
     }
     .result-item:last-child {
       margin-bottom: 0;
-      border-radius: 2px 2px 5px 5px;
+      border-radius: 3px 3px 7px 7px;
     }
+    .result-item:focus-within {
+      box-shadow: 0 0 0 2px inset var(--cerulean);
+      outline: none;
+    }
+    .result-item:has(input[type='checkbox']:checked) {
+      background: var(--cool-sky);
+    }
+
     .result-checkbox {
       margin: 0 15px 0 10px;
       border: 5px solid var(--charcoal);
@@ -120,36 +148,75 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     .highlight {
       background: var(--banana);
     }
-  `;
 
-  @query('#search-input')
-  input!: HTMLInputElement;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --container-background: var(--dark-grey);
+        --container-border: var(--darker-grey);
+      }
+
+      #search-container,
+      #results-container {
+        background: var(--charcoal);
+        border-color: var(--dark-grey);
+      }
+
+      #search-label {
+        border-color: var(--dark-grey);
+        background: var(--charcoal);
+        color: var(--lavender);
+      }
+      #search-input {
+        background: var(--grey);
+        color: var(--ghost-white);
+      }
+      #search-input::-webkit-search-cancel-button {
+        color: white;
+        background: white;
+        fill: white;
+      }
+      #search-input::placeholder {
+        color: var(--ghost-white);
+        opacity: 0.6;
+      }
+      #search-input::selection {
+        background: var(--cool-sky);
+      }
+
+      .result-item {
+        border-color: var(--grey);
+      }
+      .result-cell-key {
+        color: var(--thistle);
+      }
+      .result-cell-value {
+        color: var(--ghost-white);
+      }
+      .highlight {
+        color: var(--charcoal);
+      }
+    }
+  `;
 
   @property({ type: Array, attribute: 'search-data' }) data = [];
 
   @property({ type: String, attribute: 'placeholder' }) placeholder =
-    'What would you like to find?';
+    'Type two or more characters to begin search.';
+
+  @property({ type: String, attribute: 'label' }) label = 'Search';
 
   @property({ type: Array, attribute: false })
   result: Array<any> = [];
 
-  submitSearch() {
-    console.log('SUBMITTED FOR SEARCH', this.input.value);
-    console.log('DATA TO BE SEARCHED', this.data);
-
+  submitSearch(textInput: string): void {
     this.result = [];
-    // const result: typeof this.data = [];
-    this.data.forEach(dataItem => {
-      const hasData = findValueInNestedObject(dataItem, this.input.value);
+    this.data.forEach((dataItem: Record<string, any>) => {
+      const hasData = findValueInNestedObject(dataItem, textInput);
       if (hasData) {
         // result.push(dataItem);
         this.result = [...this.result, dataItem];
       }
     });
-
-    console.log('RESULTS', this.result);
-
-    // this.input.value = '';
   }
 
   renderRows(rowData: any, searchString: string, entryKey?: string): any {
@@ -178,39 +245,86 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
           `
         : this.renderRows(rowData[entry], searchString, entry),
     );
+
     return isEntryKeyString
       ? html`${resultCells}`
       : html`
-          <div class="result-item">
+          <label
+            class="result-item"
+            for=${`datarow-${rowData.id}`}
+            tabindex="0"
+            @keydown=${(e: any) => this.keyboardNav(e, Number(rowData.id))}
+          >
             <input
               class="result-checkbox"
               type="checkbox"
+              id=${`datarow-${rowData.id}`}
               .value=${rowData.id}
+              @click=${(e: any) =>
+                this.toggleSelectedResult(Number(e.target.value))}
+              .checked=${this.selectedResults.includes(rowData.id)}
+              inert
             />
             ${resultCells}
-          </div>
+          </label>
         `;
+  }
+
+  @property() textInput = '';
+
+  onInput(e: Event) {
+    const inputEl = e.target as HTMLInputElement;
+    this.textInput = inputEl.value;
+    if (inputEl.value.length > 1) {
+      this.submitSearch(this.textInput);
+    } else {
+      this.result = [];
+    }
+  }
+
+  @property({ type: Array, attribute: false })
+  selectedResults: Array<number> = [];
+
+  keyboardNav(e: KeyboardEvent, selectedId: number) {
+    // console.log(e);
+    if (e.code === 'Space') {
+      this.toggleSelectedResult(selectedId);
+    }
+    console.log(this.selectedResults);
+  }
+
+  toggleSelectedResult(selectedId: number) {
+    // console.log('IN SELECTED RESULT', this.selectedResults);
+    if (this.selectedResults.includes(selectedId)) {
+      const resultsWithClickedRemoved = this.selectedResults.filter(
+        result => result !== selectedId,
+      );
+      // console.log('resultsWithClickedRemoved', resultsWithClickedRemoved);
+      this.selectedResults = resultsWithClickedRemoved;
+    } else {
+      this.selectedResults = [...this.selectedResults, selectedId];
+    }
+    // console.log('OUT SELECTED RESULT', this.selectedResults);
   }
 
   render() {
     return html`
-      <div id="root-container">
+      <form id="root-container">
         <div id="search-container">
+          <label id="search-label" for="search-input">${this.label}</label>
           <input
             id="search-input"
             type="search"
             placeholder=${this.placeholder}
+            @input=${this.onInput}
           />
-          <button id="submit-button" type="submit" @click=${this.submitSearch}>
-            SEARCH
-          </button>
         </div>
         ${this.result.length > 0
           ? html`<div id="results-container">
-              ${this.renderRows(this.result, this.input?.value)}
+              ${this.renderRows(this.result, this.textInput)}
             </div>`
           : null}
-      </div>
+      </form>
     `;
   }
 }

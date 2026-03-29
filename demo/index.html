@@ -10,6 +10,11 @@
       body {
         background: #fafafa;
       }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #2c2c2c;
+        }
+      }
     </style>
   </head>
   <body>
@@ -19,12 +24,11 @@
     src="../dist/src/juliusbaer-webcomponent-search.js"
     ></script> -->
     <!-- <juliusbaer-webcomponent-search
-    search-data='[{"name": "yomama"}, {"name": "yopapa"}]'
+    search-data='[{"name": "case"}, {"name": "riviera"}]'
     ></juliusbaer-webcomponent-search> -->
-
+    <!-- -->
     <!-- JS SCRIPT WAY-->
     <div id="demo"></div>
-
     <script type="module">
       import { html, render } from 'lit';
       import '../dist/src/juliusbaer-webcomponent-search.js';
@@ -35,7 +39,8 @@
         html`
           <juliusbaer-webcomponent-search
             .data=${transactionData}
-            .placeholder="What can I help you with?"
+            label="Transactions"
+            placeholder="What can I help you with?"
           >
           </juliusbaer-webcomponent-search>
         `,
