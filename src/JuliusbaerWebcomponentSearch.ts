@@ -66,13 +66,17 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   static styles = getStyles();
 
   // REACTIVE PROPERTIES
+  // Input Name: Mandatory as required by event broadcaster
+  @property({ type: String, attribute: 'name' })
+  name = '';
+
   // Search Input String
   @property({ type: String })
   textInput = '';
 
   // ALL Search Data Results
   @property({ type: Array, attribute: 'search-data' })
-  data = [];
+  data: Array<any> = [];
 
   // Search Input Placeholder String
   @property({ type: String, attribute: 'placeholder' })
@@ -218,7 +222,22 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       // If its not in the list, add it.
       this.selectedResults = [...this.selectedResults, selectedId];
     }
-    console.log('SELECTED RESULT ID LIST:', this.selectedResults);
+    if (this.selectedResults.length > 0) {
+      this.broadcastSelectedResultsEvent(this.selectedResults);
+    }
+  }
+
+  broadcastSelectedResultsEvent(results: Array<any>) {
+    const eventName = `${this.name}_ResultUpdate`;
+    const arrayOfSelectedItems = this.data.filter(item =>
+      // @ts-ignore
+      results.includes(item.id),
+    );
+    // @ts-ignore
+    const newEvent = new CustomEvent(eventName, {
+      detail: arrayOfSelectedItems,
+    });
+    window.dispatchEvent(newEvent);
   }
 
   render() {

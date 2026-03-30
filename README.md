@@ -16,7 +16,7 @@
 - [x] Dark /Light Mode support ...
 - [x] ... honors browser settings
 - [ ] ... but can be overridden by attribute
-- [ ] Broadcast Event with selected results
+- [x] Broadcast Event with selected results
 - [ ] Ensure responsive design patterns are adhered to
 - [x] Styles are only within scope of shadowDOM
 - [ ] Test Suite
@@ -38,11 +38,13 @@ The specification for this web component was provided by Julius Baer as part of 
 
 ## Parameters
 
-data: an array of objects containing the data you wish to search. Requires an id(number) but other than that, the data can be any number of key/value pairs.
+**name**: _(required)_ a string that acts as a unique identifier for this search facility. It will be used to determine the name of the event broadcast with the results of the search. e.g. a name of "Accounts" will result in the name of the event being "Accounts_ResultUpdate" which you will need to subscribe to these events in a listener.
 
-label: a text label that sits above the search window to indicate what data the search facility will search through.
+**data**: _(required)_ an array of objects containing the data you wish to search. Each item requires an id(number) but other than that, the data can be any number of key/value pairs.
 
-placeholder: a text label to act as a short written indicator to prompt the user to use the search input.
+**label**: _(optional)_ a text label that sits above the search window to indicate what data the search facility will search through.
+
+**placeholder**: _(optional)_ a text label to act as a short written indicator to prompt the user to use the search input.
 
 ---
 

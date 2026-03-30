@@ -168,6 +168,7 @@
       render(
         html`
           <juliusbaer-webcomponent-search
+            name="Transactions"
             .data=${transactionData}
             label="Transactions"
             placeholder="What can I help you with?"
@@ -276,5 +277,11 @@
         media drugs.
       </em>
     </p>
+
+    <script>
+      window.addEventListener('Transactions_ResultUpdate', e => {
+        console.log('Transaction Result Update Received', e.detail);
+      });
+    </script>
   </body>
 </html>
