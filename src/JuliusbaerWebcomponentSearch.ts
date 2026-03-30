@@ -61,7 +61,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
 
   // REACTIVE PROPERTIES
   // Search Input String
-  @property({ type: String }) textInput = 'el';
+  @property({ type: String }) textInput = '';
 
   // ALL Search Data Results
   @property({ type: Array, attribute: 'search-data' }) data = [];
@@ -71,7 +71,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     'Type two or more characters to begin search.';
 
   // Search Input Label Value
-  @property({ type: String, attribute: 'label' }) label = 'Search';
+  @property({ type: String, attribute: 'label' }) label = '';
 
   // Filtered Search Data Results (objects from 'data' that contain values that partial match 'textInput')
   @property({ type: Array, attribute: false })
@@ -146,6 +146,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
         `;
   }
 
+  // SEARCH INPUT function - on input change submitSearch is called when
+  // value string is 2 chars or more in length
   onInput(e: Event) {
     const inputEl = e.target as HTMLInputElement;
     this.textInput = inputEl.value;
@@ -156,23 +158,29 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     }
   }
 
+  // KEYBOARD NAVIGATION CAPTURE - captures keydown events and simulates
+  // native space-key select behaviour on checkboxes. This was required
+  // because the native behaviour (label acting as proxy for any contained
+  // checkbox elements) browser events were not being triggered for some
+  // unexplained reason. Investigate further if time permits.
   keyboardNav(e: KeyboardEvent, selectedId: number) {
     // console.log(e);
     if (e.code === 'Space') {
       this.toggleSelectedResult(selectedId);
     }
-    console.log(this.selectedResults);
+    // console.log(this.selectedResults);
   }
 
+  // TOGGLE SELECTED RESULT - Add it if its not in the list, remove it if it is
   toggleSelectedResult(selectedId: number) {
-    // console.log('IN SELECTED RESULT', this.selectedResults);
     if (this.selectedResults.includes(selectedId)) {
+      // If its already in the list, remove it.
       const resultsWithClickedRemoved = this.selectedResults.filter(
         result => result !== selectedId,
       );
-      // console.log('resultsWithClickedRemoved', resultsWithClickedRemoved);
       this.selectedResults = resultsWithClickedRemoved;
     } else {
+      // If its not in the list, add it.
       this.selectedResults = [...this.selectedResults, selectedId];
     }
     console.log('SELECTED RESULT ID LIST:', this.selectedResults);
@@ -182,7 +190,11 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     return html`
       <form id="root-container">
         <div id="search-container">
-          <label id="search-label" for="search-input">${this.label}</label>
+          ${this.label.length > 0
+            ? html`<label id="search-label" for="search-input"
+                >${this.label}</label
+              >`
+            : null}
           <input
             id="search-input"
             type="search"

@@ -21,7 +21,9 @@ export default function getStyles(): CSSResult {
       display: block;
       padding: 25px;
       color: var(--charcoal, #000);
-      font-family: Verdana, Geneva, Tahoma, Helvetica, sans-serif;
+      font-family:
+        'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      /* font-family: Verdana, Geneva, Tahoma, Helvetica, sans-serif; */
     }
     #root-container {
       width: 100%;
@@ -45,7 +47,7 @@ export default function getStyles(): CSSResult {
     }
     #search-label {
       position: absolute;
-      top: -25px;
+      top: -24px;
       left: 6px;
       padding: 5px 5px 0 5px;
       border-radius: 10px 10px 0 0;
