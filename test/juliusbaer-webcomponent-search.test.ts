@@ -119,6 +119,68 @@ describe('JuliusbaerWebcomponentSearch', () => {
     expect(el.shadowRoot?.innerHTML).to.contain('results-container');
   });
 
+  it('supports keyboard selection of result-item elements', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search
+        name="Test"
+        .data=${[
+          { id: 0, name: 'Case' },
+          { id: 1, name: 'Molly' },
+          { id: 2, name: 'Armitage' },
+          { id: 3, name: 'Riviera' },
+          { id: 4, name: 'Monica' },
+        ]}
+        label="Test Label"
+      ></juliusbaer-webcomponent-search>
+    `);
+
+    const searchInput = el.shadowRoot?.querySelector(
+      '#search-input',
+    ) as HTMLInputElement;
+    searchInput.value = 'mo';
+    searchInput.dispatchEvent(
+      new Event('input', { bubbles: true, composed: true }),
+    );
+    await el.updateComplete;
+
+    const resultItems = Array.from(
+      el.shadowRoot?.querySelectorAll('.result-item') ?? [],
+    ) as HTMLElement[];
+    expect(resultItems.length).to.equal(2);
+
+    const resultCheckboxes = Array.from(
+      el.shadowRoot?.querySelectorAll('.result-checkbox') ?? [],
+    ) as HTMLInputElement[];
+    const firstResultId = Number(resultCheckboxes[0].value);
+    const secondResultId = Number(resultCheckboxes[1].value);
+
+    resultItems[0].focus();
+    resultItems[0].dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: ' ',
+        code: 'Space',
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    await el.updateComplete;
+    expect(el.selectedResults).to.deep.equal([firstResultId]);
+
+    resultItems[1].focus();
+    resultItems[1].dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: ' ',
+        code: 'Space',
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    await el.updateComplete;
+    expect(el.selectedResults).to.deep.equal([firstResultId, secondResultId]);
+  });
+
   it('when search results are showing, clicking outside of the component will close the results', async () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
