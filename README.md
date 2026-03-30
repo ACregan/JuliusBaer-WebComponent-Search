@@ -36,13 +36,13 @@ npm install
 
 ## Demo
 
-Now that we have clones the project and installed the dependancies we can run the project locally to see its features in action:
+Now that we have cloned the project and installed the dependancies, we can run the project locally to see its features in action:
 
 ```bash
 npm run start
 ```
 
-This will load the component in a local environment which can be accessed at [localhost:8000/demo](http://localhost:8000/demo/)
+This will build and load the component in a local environment which can be accessed at [localhost:8000/demo](http://localhost:8000/demo/)
 
 ---
 
@@ -55,6 +55,8 @@ To run the test suite simply `cd` into the project folder in your terminal and r
 ```bash
 npm test
 ```
+
+This will also provide a coverage report which can be accessed from the `/coverage` folder. To view it you can simply drag the file `/coverage/lcov-report/index.html` into a blank browser tab.
 
 ---
 
