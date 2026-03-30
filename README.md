@@ -11,7 +11,7 @@
 - [x] ... With Multiple Selectable Results (checkboxes?).
 - [x] ... With Keyboard Navigation.
 - [x] ... With Results Being Keyboard Navigatable.
-- [ ] ... With Results Being Displayed above Search facility if space below is not sufficient.
+- [x] ... With Results Being Displayed above Search facility if space below is not sufficient.
 - [x] Dark Mode...
 - [x] ... determined by browser
 - [ ] ... but can be overriden by attribute

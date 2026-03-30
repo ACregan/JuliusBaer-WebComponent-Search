@@ -26,6 +26,7 @@ export default function getStyles(): CSSResult {
       /* font-family: Verdana, Geneva, Tahoma, Helvetica, sans-serif; */
     }
     #root-container {
+      position: relative;
       width: 100%;
       margin-top: 20px;
     }
@@ -99,14 +100,33 @@ export default function getStyles(): CSSResult {
 
     #results-container {
       border-radius: 0 0 10px 10px;
-      padding: 10px;
+      padding: 5px 10px 15px 20px;
       border: 5px solid var(--container-border);
       border-top: none;
       background: var(--container-background);
       transform: translateY(-13px);
       max-height: 40vh;
       overflow-y: scroll;
+
+      position: absolute;
+      left: 0;
+      right: 0;
     }
+    #results-container.positionAbove {
+      border-radius: 10px 10px 0 0;
+      border-top: 5px solid var(--container-border);
+      border-bottom: none;
+      bottom: 43px;
+      padding: 15px 10px 5px 20px;
+    }
+
+    #results-container.positionAbove .result-item:first-child {
+      border-radius: 7px 7px 3px 3px;
+    }
+    #results-container.positionAbove .result-item:last-child {
+      border-radius: 3px;
+    }
+
     .result-item {
       border-radius: 3px;
       border: 1px solid var(--container-border);

@@ -14,18 +14,24 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     this.onClickOutside = this.onClickOutside.bind(this);
   }
 
-  // On Mount, add listener for detecting clicks outside the search form
+  // On Mount, add listeners for detecting clicks outside the search form
+  // and detecting scroll position and recalculating result container position
   connectedCallback(): void {
     super.connectedCallback();
     // Add the global listener when the component is added to the DOM
     document.addEventListener('click', this.onClickOutside);
+    document.addEventListener('scroll', this.determineResultsContainerPosition);
   }
 
-  // On Dismount, remove the listener
+  // On Dismount, remove the listeners
   disconnectedCallback(): void {
     super.disconnectedCallback();
     // Clean up the listener when the component is removed
     document.removeEventListener('click', this.onClickOutside);
+    document.removeEventListener(
+      'scroll',
+      this.determineResultsContainerPosition,
+    );
   }
 
   // function to be called when pointer event is outside of the search form
@@ -61,17 +67,20 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
 
   // REACTIVE PROPERTIES
   // Search Input String
-  @property({ type: String }) textInput = '';
+  @property({ type: String })
+  textInput = '';
 
   // ALL Search Data Results
-  @property({ type: Array, attribute: 'search-data' }) data = [];
+  @property({ type: Array, attribute: 'search-data' })
+  data = [];
 
   // Search Input Placeholder String
-  @property({ type: String, attribute: 'placeholder' }) placeholder =
-    'Type two or more characters to begin search.';
+  @property({ type: String, attribute: 'placeholder' })
+  placeholder = 'Type two or more characters to begin search.';
 
   // Search Input Label Value
-  @property({ type: String, attribute: 'label' }) label = '';
+  @property({ type: String, attribute: 'label' })
+  label = '';
 
   // Filtered Search Data Results (objects from 'data' that contain values that partial match 'textInput')
   @property({ type: Array, attribute: false })
@@ -80,6 +89,31 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // SELECTED Search Data Results - Array of ID's of all results with checkbox selected
   @property({ type: Array, attribute: false })
   selectedResults: Array<number> = [];
+
+  // Boolean to force position of element
+  @property({ type: Boolean, attribute: false })
+  displayResultsAboveInput = false;
+
+  // CALCULATE WHERE TO DISPLAY RESULT - to be called on search input
+  // If the input is nearer to the bottom of the viewport then display the results above the input
+  determineResultsContainerPosition() {
+    if (this.shadowRoot) {
+      const element = this.shadowRoot.getElementById('root-container');
+      if (element) {
+        const elementRect = element.getBoundingClientRect();
+        const spaceAbove = elementRect.top;
+        const spaceBelow = window.innerHeight - elementRect.bottom;
+
+        if (spaceBelow < spaceAbove) {
+          // logic to render with more space above input
+          this.displayResultsAboveInput = true;
+        } else {
+          // logic to render with more (or equal) space on bottom
+          this.displayResultsAboveInput = false;
+        }
+      }
+    }
+  }
 
   // SUBMIT SEARCH
   submitSearch(textInput: string): void {
@@ -151,6 +185,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   onInput(e: Event) {
     const inputEl = e.target as HTMLInputElement;
     this.textInput = inputEl.value;
+    this.determineResultsContainerPosition();
     if (inputEl.value.length > 1) {
       this.submitSearch(this.textInput);
     } else {
@@ -204,7 +239,10 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
           />
         </div>
         ${this.result.length > 0
-          ? html`<div id="results-container">
+          ? html`<div
+              id="results-container"
+              class=${this.displayResultsAboveInput ? 'positionAbove' : ''}
+            >
               ${this.renderRows(this.result, this.textInput)}
             </div>`
           : null}
