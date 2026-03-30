@@ -11,13 +11,22 @@
 - [x] ... With Multiple Selectable Results (checkboxes?).
 - [x] ... With Keyboard Navigation.
 - [x] ... With Results Being Keyboard Navigatable.
-- [x] ... With Results Being Displayed above Search facility if space below is not sufficient.
-- [x] Dark Mode...
-- [x] ... determined by browser
-- [ ] ... but can be overriden by attribute
+- [x] ... With Dynamic Positioning: Results Being Displayed above Search facility if space below is not sufficient.
+- [x] Dropdown overlays content below search input
+- [x] Dark /Light Mode support ...
+- [x] ... honors browser settings
+- [ ] ... but can be overridden by attribute
+- [ ] Broadcast Event with selected results
 - [ ] Ensure responsive design patterns are adhered to
+- [x] Styles are only within scope of shadowDOM
 - [ ] Test Suite
 - [ ] Storybook Scenarios
+- [ ] Document...
+- [ ] ... Installation
+- [ ] ... Usage Examples
+- [ ] ... API documentation
+- [ ] ... Testing Instructions
+- [ ] ... Storybook
 
 ## Purpose
 
