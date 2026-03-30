@@ -248,7 +248,28 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     window.dispatchEvent(newEvent);
   }
 
+  // ATTRIBUTE CHECKER - Avoid Rendering without mandatory attributes
+  areMandatoryAttributesPresent() {
+    if (!this.name || this.name === '') {
+      return false;
+    }
+    if (this.data.length < 1) {
+      return false;
+    }
+    return true;
+  }
+
   render() {
+    if (this.areMandatoryAttributesPresent() === false) {
+      return html`<p id="attributesWarning">
+        <span>
+          WARNING: Mandatory Attributes Are Missing. Have you included a 'name'
+          attribute and a 'data' attribute when using
+          &lt;juliusbaer-webcomponent-search&gt;
+        </span>
+      </p>`;
+    }
+
     return html`
       <form id="root-container">
         <div id="search-container">

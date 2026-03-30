@@ -180,6 +180,26 @@ export default function getStyles(): CSSResult {
       background: var(--banana);
     }
 
+    #attributesWarning {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: repeating-linear-gradient(
+        -45deg,
+        #222,
+        #222 10px,
+        #ffff00 10px,
+        #ffff00 20px
+      );
+    }
+    #attributesWarning > span {
+      padding: 5px;
+      background: black;
+      color: #ffff00;
+      border: 2px solid #ffff00;
+    }
+
     @media (prefers-color-scheme: dark) {
       :root {
         --container-background: var(--dark-grey);

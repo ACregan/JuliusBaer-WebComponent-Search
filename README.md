@@ -19,7 +19,7 @@
 - [x] Broadcast Event with selected results
 - [ ] Ensure responsive design patterns are adhered to
 - [x] Styles are only within scope of shadowDOM
-- [ ] Test Suite
+- [x] Test Suite
 - [ ] Storybook Scenarios
 - [ ] Document...
 - [ ] ... Installation
