@@ -62,6 +62,12 @@ SOURCE: https://medium.com/@mz.ebrahimi/a-comparative-analysis-of-stencil-core-a
 
 ## Testing
 
+The testing setup in this repo was provided out-of-the-box with the Open Web Component dev environment that this project was built upon.
+
+To run the test suite simply cd into the project folder in your terminal and run:
+
+`npm test`
+
 ---
 
 ---
