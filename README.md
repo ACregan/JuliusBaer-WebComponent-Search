@@ -58,6 +58,12 @@ npm test
 
 This will also provide a coverage report which can be accessed from the `/coverage` folder. To view it you can simply drag the file `/coverage/lcov-report/index.html` into a blank browser tab.
 
+Alternatively, to run the tests in interactive watch mode run:
+
+```bash
+npm run test:watch
+```
+
 ---
 
 ## Storybook
@@ -66,6 +72,22 @@ Storybook provides a playground for testing the various features and states of t
 
 ```bash
 npm run storybook
+```
+
+---
+
+## Linting and formatting
+
+To scan the project for linting and formatting errors, run
+
+```bash
+npm run lint
+```
+
+To automatically fix linting and formatting errors, run
+
+```bash
+npm run format
 ```
 
 ---
@@ -85,6 +107,20 @@ The output of this will be placed in the `dist` folder at the project root folde
 ## Usage
 
 ```html
+<script type="module">
+  import 'juliusbaer-webcomponent-search/juliusbaer-webcomponent-search.js';
+</script>
+
+<juliusbaer-webcomponent-search
+  name="Crew"
+  data='[{"id":0,"name":"Case","role":"Cowboy"},{"id":1,"name":"Molly","role":"Razor Girl"},{"id":2,"name":"Armitage","role":"Major"},{"id":3,"name":"Riviera","role":"Illusionist"}]'
+  label="The Crew"
+  placeholder="Type to search."
+>
+</juliusbaer-webcomponent-search>
+```
+
+<!-- ```html
 <div id="search-container"></div>
 <script type="module">
   import { html, render } from 'lit';
@@ -109,7 +145,7 @@ The output of this will be placed in the `dist` folder at the project root folde
     document.querySelector('#search-container'),
   );
 </script>
-```
+``` -->
 
 ## Parameters
 
@@ -162,83 +198,3 @@ SOURCE: https://medium.com/@mz.ebrahimi/a-comparative-analysis-of-stencil-core-a
 - [x] ... Storybook
 
 ---
-
----
-
-// TODO: Merge the content below (from open web component standard generated readme.md) with the readme above
-
-# \<juliusbaer-webcomponent-search>
-
-This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
-
-## Installation
-
-```bash
-npm i juliusbaer-webcomponent-search
-```
-
-## Usage
-
-```html
-<script type="module">
-  import 'juliusbaer-webcomponent-search/juliusbaer-webcomponent-search.js';
-</script>
-
-<juliusbaer-webcomponent-search></juliusbaer-webcomponent-search>
-```
-
-## Linting and formatting
-
-To scan the project for linting and formatting errors, run
-
-```bash
-npm run lint
-```
-
-To automatically fix linting and formatting errors, run
-
-```bash
-npm run format
-```
-
-## Testing with Web Test Runner
-
-To execute a single test run:
-
-```bash
-npm run test
-```
-
-To run the tests in interactive watch mode run:
-
-```bash
-npm run test:watch
-```
-
-## Demoing with Storybook
-
-To run a local instance of Storybook for your component, run
-
-```bash
-npm run storybook
-```
-
-To build a production version of Storybook, run
-
-```bash
-npm run storybook:build
-```
-
-## Tooling configs
-
-For most of the tools, the configuration is in the `package.json` to reduce the amount of files in your project.
-
-If you customize the configuration a lot, you can consider moving them to individual files.
-
-## Local Demo with `web-dev-server`
-
-```bash
-npm start
-```
-
-To run a local development server that serves the basic demo located in `demo/index.html`
