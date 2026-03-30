@@ -7,6 +7,47 @@ import {
 } from './utils/utilities.js';
 
 export class JuliusbaerWebcomponentSearch extends LitElement {
+  // Click outside detection
+  constructor() {
+    super();
+    this.onClickOutside = this.onClickOutside.bind(this);
+  }
+
+  // On Mount, add listener for detecting clicks outside the search form
+  connectedCallback() {
+    super.connectedCallback();
+    // Add the global listener when the component is added to the DOM
+    document.addEventListener('click', this.onClickOutside);
+  }
+
+  // On Dismount, remove the listener
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    // Clean up the listener when the component is removed
+    document.removeEventListener('click', this.onClickOutside);
+  }
+
+  // function to be called when pointer event is outside of the search form
+  onClickOutside(event: PointerEvent) {
+    // Check if the clicked element is NOT inside this component
+    if (event.target instanceof Node && !this.contains(event.target)) {
+      // console.log('Clicked outside the web component');
+      // Put your logic here (e.g., close a dropdown or modal)
+      this.closeMyElement();
+    }
+  }
+
+  // Function to close the search dropdown
+  closeMyElement() {
+    // ... logic to hide/close the component ...
+    // console.log('close element function called', this.selectedResults);
+    // TODO: Provide a better UX than just flushing the results and textInput values
+    // perhaps collapse the results container and reopen it when the user focuses on the input again?
+    this.textInput = '';
+    this.result = [];
+  }
+
+  // STYLES
   static styles = css`
     :host {
       --ghost-white: #fffaff;
@@ -88,6 +129,19 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     #submit-button:active {
       background: var(--cerulean);
     }
+
+    #results-container::-webkit-scrollbar-track {
+      border-radius: 10px;
+    }
+    #results-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    #results-container::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 0 2px var(--cool-sky);
+      background-color: var(--cool-sky);
+    }
+
     #results-container {
       border-radius: 0 0 10px 10px;
       padding: 10px;
@@ -95,6 +149,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       border-top: none;
       background: var(--container-background);
       transform: translateY(-13px);
+      max-height: 40vh;
+      overflow-y: scroll;
     }
     .result-item {
       border-radius: 3px;
@@ -198,15 +254,27 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     }
   `;
 
+  // REACTIVE PROPERTIES
+  // Search Input String
+  @property({ type: String }) textInput = '';
+
+  // ALL Search Data Results
   @property({ type: Array, attribute: 'search-data' }) data = [];
 
+  // Search Input Placeholder String
   @property({ type: String, attribute: 'placeholder' }) placeholder =
     'Type two or more characters to begin search.';
 
+  // Search Input Label Value
   @property({ type: String, attribute: 'label' }) label = 'Search';
 
+  // FILTERED Search Data Results (that partial match textInput)
   @property({ type: Array, attribute: false })
   result: Array<any> = [];
+
+  // SELECTED Seardh Data Results - Array of ID's of all results with checkbox selected
+  @property({ type: Array, attribute: false })
+  selectedResults: Array<number> = [];
 
   submitSearch(textInput: string): void {
     this.result = [];
@@ -270,8 +338,6 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
         `;
   }
 
-  @property() textInput = '';
-
   onInput(e: Event) {
     const inputEl = e.target as HTMLInputElement;
     this.textInput = inputEl.value;
@@ -281,9 +347,6 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       this.result = [];
     }
   }
-
-  @property({ type: Array, attribute: false })
-  selectedResults: Array<number> = [];
 
   keyboardNav(e: KeyboardEvent, selectedId: number) {
     // console.log(e);
@@ -304,7 +367,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     } else {
       this.selectedResults = [...this.selectedResults, selectedId];
     }
-    // console.log('OUT SELECTED RESULT', this.selectedResults);
+    console.log('SELECTED RESULT ID LIST:', this.selectedResults);
   }
 
   render() {
@@ -317,6 +380,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
             type="search"
             placeholder=${this.placeholder}
             @input=${this.onInput}
+            .value=${this.textInput}
           />
         </div>
         ${this.result.length > 0
