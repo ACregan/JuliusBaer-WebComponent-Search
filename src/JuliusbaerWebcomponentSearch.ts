@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import {
   findValueInNestedObject,
@@ -6,6 +6,11 @@ import {
   valueWithHighlighting,
 } from './utils/utilities.js';
 import getStyles from './JuliusbaerWebcomponentSearch.styles.js';
+
+interface SearchItem {
+  id: number;
+  [key: string]: any;
+}
 
 export class JuliusbaerWebcomponentSearch extends LitElement {
   // CLICK OUTSIDE DETECTION
@@ -72,11 +77,11 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
 
   // Search Input String
   @property({ type: String })
-  textInput = '';
+  textInput: string = '';
 
   // ALL Search Data Results
   @property({ type: Array, attribute: 'search-data' })
-  data: Array<any> = [];
+  data: Array<SearchItem> = [];
 
   // Search Input Placeholder String
   @property({ type: String, attribute: 'placeholder' })
@@ -88,7 +93,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
 
   // Filtered Search Data Results (objects from 'data' that contain values that partial match 'textInput')
   @property({ type: Array, attribute: false })
-  result: Array<any> = [];
+  result: Array<SearchItem> = [];
 
   // SELECTED Search Data Results - Array of ID's of all results with checkbox selected
   @property({ type: Array, attribute: false })
@@ -122,7 +127,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // SUBMIT SEARCH
   submitSearch(textInput: string): void {
     this.result = [];
-    this.data.forEach((dataItem: Record<string, any>) => {
+    this.data.forEach((dataItem: SearchItem) => {
       const hasData = findValueInNestedObject(dataItem, textInput);
       if (hasData) {
         // result.push(dataItem);
@@ -133,7 +138,11 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
 
   // RESULT ROW RENDERER: Recursive function that itterates over object returns row
   // at top level or column cell if nested within object
-  renderRows(rowData: any, searchString: string, entryKey?: string): any {
+  renderRows(
+    rowData: any,
+    searchString: string,
+    entryKey?: string,
+  ): TemplateResult {
     // Get Object Keys
     const resultItemEntries = Object.keys(rowData);
     // Identify if key is from object property or just a numeric key
@@ -201,7 +210,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // native space-key select behaviour on checkboxes. This was required
   // because the native behaviour (label acting as proxy for any contained
   // checkbox elements) browser events were not being triggered for some
-  // unexplained reason. Investigate further if time permits.
+  // unexplained reason. I suspect Lit is intercepting them. Investigate
+  // further if time permits.
   keyboardNav(e: KeyboardEvent, selectedId: number) {
     // console.log(e);
     if (e.code === 'Space') {
@@ -227,14 +237,12 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     }
   }
 
-  broadcastSelectedResultsEvent(results: Array<any>) {
+  broadcastSelectedResultsEvent(results: Array<number>) {
     const eventName = `${this.name}_ResultUpdate`;
     const arrayOfSelectedItems = this.data.filter(item =>
-      // @ts-ignore
       results.includes(item.id),
     );
-    // @ts-ignore
-    const newEvent = new CustomEvent(eventName, {
+    const newEvent = new CustomEvent<Array<SearchItem>>(eventName, {
       detail: arrayOfSelectedItems,
     });
     window.dispatchEvent(newEvent);
