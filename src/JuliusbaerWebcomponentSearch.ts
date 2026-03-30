@@ -1,34 +1,35 @@
-import { html, css, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import {
   findValueInNestedObject,
   isNumberOrString,
   valueWithHighlighting,
 } from './utils/utilities.js';
+import getStyles from './JuliusbaerWebcomponentSearch.styles.js';
 
 export class JuliusbaerWebcomponentSearch extends LitElement {
-  // Click outside detection
+  // CLICK OUTSIDE DETECTION
   constructor() {
     super();
     this.onClickOutside = this.onClickOutside.bind(this);
   }
 
   // On Mount, add listener for detecting clicks outside the search form
-  connectedCallback() {
+  connectedCallback(): void {
     super.connectedCallback();
     // Add the global listener when the component is added to the DOM
     document.addEventListener('click', this.onClickOutside);
   }
 
   // On Dismount, remove the listener
-  disconnectedCallback() {
+  disconnectedCallback(): void {
     super.disconnectedCallback();
     // Clean up the listener when the component is removed
     document.removeEventListener('click', this.onClickOutside);
   }
 
   // function to be called when pointer event is outside of the search form
-  onClickOutside(event: PointerEvent) {
+  onClickOutside(event: PointerEvent): void {
     // Check if the clicked element is NOT inside this component
     if (event.target instanceof Node && !this.contains(event.target)) {
       // console.log('Clicked outside the web component');
@@ -37,226 +38,30 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     }
   }
 
+  // CLOSE SEARCH DROPDOWN
   // Function to close the search dropdown
-  closeMyElement() {
+  closeMyElement(): void {
     // ... logic to hide/close the component ...
     // console.log('close element function called', this.selectedResults);
     // TODO: Provide a better UX than just flushing the results and textInput values
     // perhaps collapse the results container and reopen it when the user focuses on the input again?
+    this.resetForm();
+  }
+
+  // RESET FORM STATE
+  // Reset entire form: Clear search string, flush results list and checked items list
+  resetForm(): void {
     this.textInput = '';
     this.result = [];
+    this.selectedResults = [];
   }
 
   // STYLES
-  static styles = css`
-    :host {
-      --ghost-white: #fffaff;
-      --lavender: #e6e6e6;
-      --thistle: #c5c5c5;
-      --charcoal: #524f53;
-      --cerulean: #2d728f;
-      --cool-sky: #35a7ff;
-      --banana: #ffe74c;
-
-      --grey: #878787;
-      --dark-grey: #595959;
-      --darker-grey: #404040;
-
-      --container-background: var(--lavender);
-      --container-border: var(--thistle);
-
-      display: block;
-      padding: 25px;
-      color: var(--charcoal, #000);
-      font-family: Verdana, Geneva, Tahoma, Helvetica, sans-serif;
-    }
-    #root-container {
-      width: 100%;
-      margin-top: 20px;
-    }
-    #search-container {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      align-content: stretch;
-      align-items: center;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 10px;
-      background: var(--container-background);
-      border-radius: 10px;
-
-      border: 5px solid var(--container-border);
-    }
-    #search-label {
-      position: absolute;
-      top: -25px;
-      left: 6px;
-      padding: 5px 5px 0 5px;
-      border-radius: 10px 10px 0 0;
-      border: 5px solid var(--container-border);
-      border-bottom: 0;
-      font-size: 12px;
-      font-weight: 600;
-      background: var(--container-background);
-      color: var(--charcoal);
-    }
-    #search-input {
-      order: 0;
-      flex: 1 1 auto;
-      align-self: auto;
-      height: 40px;
-      padding: 0 10px;
-      border: 1px solid var(--container-border);
-      border-radius: 4px;
-    }
-    #submit-button {
-      order: 0;
-      flex: 0 1 auto;
-      align-self: auto;
-      height: 40px;
-      font-weight: 600;
-      padding: 0 10px;
-      border: 1px solid var(--cerulean);
-      border-radius: 4px;
-      box-sizing: border-box;
-      background: var(--cool-sky);
-      color: var(--ghost-white);
-      cursor: pointer;
-    }
-    #submit-button:active {
-      background: var(--cerulean);
-    }
-
-    #results-container::-webkit-scrollbar-track {
-      border-radius: 10px;
-    }
-    #results-container::-webkit-scrollbar {
-      width: 8px;
-    }
-    #results-container::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 0 2px var(--cool-sky);
-      background-color: var(--cool-sky);
-    }
-
-    #results-container {
-      border-radius: 0 0 10px 10px;
-      padding: 10px;
-      border: 5px solid var(--container-border);
-      border-top: none;
-      background: var(--container-background);
-      transform: translateY(-13px);
-      max-height: 40vh;
-      overflow-y: scroll;
-    }
-    .result-item {
-      border-radius: 3px;
-      border: 1px solid var(--container-border);
-      margin-bottom: 3px;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-content: stretch;
-      align-items: stretch;
-      padding: 5px;
-      cursor: pointer;
-    }
-    .result-item:last-child {
-      margin-bottom: 0;
-      border-radius: 3px 3px 7px 7px;
-    }
-    .result-item:focus-within {
-      box-shadow: 0 0 0 2px inset var(--cerulean);
-      outline: none;
-    }
-    .result-item:has(input[type='checkbox']:checked) {
-      background: var(--cool-sky);
-    }
-
-    .result-checkbox {
-      margin: 0 15px 0 10px;
-      border: 5px solid var(--charcoal);
-    }
-    .result-cell {
-      order: 0;
-      flex: 1 1 80px;
-      align-self: auto;
-      position: relative;
-      padding-top: 15px;
-    }
-    .result-cell-key {
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-size: 11px;
-      color: var(--charcoal);
-      text-transform: capitalize;
-      user-select: none;
-    }
-    .result-cell-value {
-      font-weight: 600;
-    }
-
-    .highlight {
-      background: var(--banana);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --container-background: var(--dark-grey);
-        --container-border: var(--darker-grey);
-      }
-
-      #search-container,
-      #results-container {
-        background: var(--charcoal);
-        border-color: var(--dark-grey);
-      }
-
-      #search-label {
-        border-color: var(--dark-grey);
-        background: var(--charcoal);
-        color: var(--lavender);
-      }
-      #search-input {
-        background: var(--grey);
-        color: var(--ghost-white);
-      }
-      #search-input::-webkit-search-cancel-button {
-        color: white;
-        background: white;
-        fill: white;
-      }
-      #search-input::placeholder {
-        color: var(--ghost-white);
-        opacity: 0.6;
-      }
-      #search-input::selection {
-        background: var(--cool-sky);
-      }
-
-      .result-item {
-        border-color: var(--grey);
-      }
-      .result-cell-key {
-        color: var(--thistle);
-      }
-      .result-cell-value {
-        color: var(--ghost-white);
-      }
-      .highlight {
-        color: var(--charcoal);
-      }
-    }
-  `;
+  static styles = getStyles();
 
   // REACTIVE PROPERTIES
   // Search Input String
-  @property({ type: String }) textInput = '';
+  @property({ type: String }) textInput = 'el';
 
   // ALL Search Data Results
   @property({ type: Array, attribute: 'search-data' }) data = [];
@@ -268,14 +73,15 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // Search Input Label Value
   @property({ type: String, attribute: 'label' }) label = 'Search';
 
-  // FILTERED Search Data Results (that partial match textInput)
+  // Filtered Search Data Results (objects from 'data' that contain values that partial match 'textInput')
   @property({ type: Array, attribute: false })
   result: Array<any> = [];
 
-  // SELECTED Seardh Data Results - Array of ID's of all results with checkbox selected
+  // SELECTED Search Data Results - Array of ID's of all results with checkbox selected
   @property({ type: Array, attribute: false })
   selectedResults: Array<number> = [];
 
+  // SUBMIT SEARCH
   submitSearch(textInput: string): void {
     this.result = [];
     this.data.forEach((dataItem: Record<string, any>) => {
@@ -287,6 +93,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     });
   }
 
+  // RESULT ROW RENDERER: Recursive function that itterates over object returns row
+  // at top level or column cell if nested within object
   renderRows(rowData: any, searchString: string, entryKey?: string): any {
     // Get Object Keys
     const resultItemEntries = Object.keys(rowData);
