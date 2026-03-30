@@ -6,6 +6,80 @@ This repo contains a Web Component designed to enable a user to search for speci
 
 The specification for this web component was provided by Julius Baer as part of the interview process for a Front-end Developer role vacancy.
 
+## Requirements
+
+- [Node.js & NPM](https://nodejs.org/)
+
+---
+
+## Installation
+
+Clone the repo
+
+```bash
+git clone https://github.com/ACregan/JuliusBaer-WebComponent-Search.git
+```
+
+In your terminal, change to the project directory
+
+```bash
+cd JuliusBaer-WebComponent-Search
+```
+
+Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## Demo
+
+Now that we have clones the project and installed the dependancies we can run the project locally to see its features in action:
+
+```bash
+npm run start
+```
+
+This will load the component in a local environment which can be accessed at [localhost:8000/demo](http://localhost:8000/demo/)
+
+---
+
+## Testing
+
+We can also run a suite of tests designed to test the functionality of the component. The testing setup in this repo was provided out-of-the-box with the Open Web Component dev environment that this project was built upon.
+
+To run the test suite simply `cd` into the project folder in your terminal and run:
+
+```bash
+npm test
+```
+
+---
+
+## Storybook
+
+Storybook provides a playground for testing the various features and states of the component. To load Storybook simply `cd` into the project folder in your terminal and run:
+
+```bash
+npm run storybook
+```
+
+---
+
+## Build
+
+To create a build of this Web Component for use in external applications run:
+
+```bash
+npm run build
+```
+
+The output of this will be placed in the `dist` folder at the project root folder.
+
+---
+
 ## Usage
 
 ```html
@@ -58,24 +132,6 @@ SOURCE: https://medium.com/@mz.ebrahimi/a-comparative-analysis-of-stencil-core-a
 
 ---
 
-## Testing
-
-The testing setup in this repo was provided out-of-the-box with the Open Web Component dev environment that this project was built upon.
-
-To run the test suite simply `cd` into the project folder in your terminal and run:
-
-`npm test`
-
----
-
-## Storybook
-
-Storybook provides a playground for testing the various features and states of the component. To load Storybook simply `cd` into the project folder in your terminal and run:
-
-`npm run storybook`
-
----
-
 ## Requirements Checklist
 
 - [x] Search Input by string ...
@@ -91,15 +147,14 @@ Storybook provides a playground for testing the various features and states of t
 - [x] Dropdown overlays content below search input
 - [x] Dark /Light Mode support ...
 - [x] ... honors browser settings
-- [ ] ... but can be overridden by attribute
 - [x] Broadcast Event with selected results
-- [ ] Ensure responsive design patterns are adhered to
+- [x] Ensure responsive design patterns are adhered to
 - [x] Styles are only within scope of shadowDOM
 - [x] Test Suite
-- [ ] Storybook Scenarios
-- [ ] Document...
-- [ ] ... Installation
-- [ ] ... Usage Examples
+- [x] Storybook Scenarios
+- [x] Document...
+- [x] ... Installation
+- [x] ... Usage Example
 - [x] ... API documentation
 - [x] ... Testing Instructions
 - [x] ... Storybook
