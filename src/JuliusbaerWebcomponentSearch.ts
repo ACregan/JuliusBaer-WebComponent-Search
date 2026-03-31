@@ -241,7 +241,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   onInput(e: Event) {
     const inputEl = e.target as HTMLInputElement;
     this.textInput = inputEl.value;
-    this.determineResultsContainerPosition();
+    this.selectedResults = [];
     if (inputEl.value.length > 1) {
       this.submitSearch(this.textInput);
     } else {

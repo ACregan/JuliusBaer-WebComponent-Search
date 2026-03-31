@@ -350,6 +350,226 @@ describe('JuliusbaerWebcomponentSearch', () => {
     expect(searchInput.disabled).to.equal(true);
   });
 
+  it('sets data to an empty array when fetched payload is not an array', async () => {
+    window.fetch = (async () =>
+      new Response(JSON.stringify({ id: 1, name: 'Not an array' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })) as typeof fetch;
+
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search name="Test" url="/api/object-payload">
+      </juliusbaer-webcomponent-search>
+    `);
+
+    await el.fetchData();
+    await el.updateComplete;
+
+    expect(el.data).to.deep.equal([]);
+    expect(el.loadError).to.equal('');
+  });
+
+  it('uses fallback error message when a non-Error value is thrown', async () => {
+    window.fetch = (async () => {
+      throw 'network-failed';
+    }) as typeof fetch;
+
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search
+        name="Test"
+        url="/api/non-error-throw"
+      ></juliusbaer-webcomponent-search>
+    `);
+
+    await el.fetchData();
+    await el.updateComplete;
+
+    expect(el.data).to.deep.equal([]);
+    expect(el.loadError).to.equal('Unable to load search data.');
+  });
+
+  it('renders nested key prefixes for nested object result values', async () => {
+    window.fetch = (async () =>
+      new Response(
+        JSON.stringify([
+          { id: 10, profile: { email: 'case@example.com' }, name: 'Case' },
+        ]),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )) as typeof fetch;
+
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search name="Test" url="/api/nested-results">
+      </juliusbaer-webcomponent-search>
+    `);
+
+    await el.fetchData();
+    await el.updateComplete;
+
+    const searchInput = el.shadowRoot?.querySelector(
+      '#search-input',
+    ) as HTMLInputElement;
+    searchInput.value = 'case@';
+    searchInput.dispatchEvent(
+      new Event('input', { bubbles: true, composed: true }),
+    );
+
+    await el.updateComplete;
+
+    const renderedKeys = Array.from(
+      el.shadowRoot?.querySelectorAll('.result-cell-key') ?? [],
+    )
+      .map(key => key.textContent?.trim())
+      .filter(Boolean);
+
+    expect(renderedKeys).to.contain('profile.email');
+  });
+
+  it('resets fetch state when url is empty', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search name="Test" url="">
+      </juliusbaer-webcomponent-search>
+    `);
+
+    el.isLoading = true;
+    el.loadError = 'something failed';
+    el.data = [{ id: 99, name: 'Existing' }];
+
+    await el.fetchData();
+    await el.updateComplete;
+
+    expect(el.isLoading).to.equal(false);
+    expect(el.loadError).to.equal('');
+    expect(el.data).to.deep.equal([]);
+  });
+
+  it('returns safely when position calculation cannot find root container', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search
+        label="Test Label"
+        url="${defaultResultsUrl}"
+      >
+      </juliusbaer-webcomponent-search>
+    `);
+
+    el.displayResultsAboveInput = false;
+    el.determineResultsContainerPosition();
+
+    expect(el.displayResultsAboveInput).to.equal(false);
+  });
+
+  it('clears selected and filtered results for short input strings', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search
+        name="Test"
+        url="${defaultResultsUrl}"
+        label="Test Label"
+      ></juliusbaer-webcomponent-search>
+    `);
+
+    await el.fetchData();
+    await el.updateComplete;
+
+    el.selectedResults = [0, 1];
+    el.result = [{ id: 0, name: 'Case' }];
+
+    const searchInput = el.shadowRoot?.querySelector(
+      '#search-input',
+    ) as HTMLInputElement;
+    searchInput.value = 'm';
+    searchInput.dispatchEvent(
+      new Event('input', { bubbles: true, composed: true }),
+    );
+
+    await el.updateComplete;
+
+    expect(el.selectedResults).to.deep.equal([]);
+    expect(el.result).to.deep.equal([]);
+  });
+
+  it('removes an already selected id when toggled again', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search name="Test" url="${defaultResultsUrl}">
+      </juliusbaer-webcomponent-search>
+    `);
+
+    el.selectedResults = [1, 2, 3];
+    el.toggleSelectedResult(2);
+
+    expect(el.selectedResults).to.deep.equal([1, 3]);
+  });
+
+  it('dispatches selected result event when submit button is clicked', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search
+        name="Test"
+        url="${defaultResultsUrl}"
+        label="Test Label"
+      ></juliusbaer-webcomponent-search>
+    `);
+
+    await el.fetchData();
+    await el.updateComplete;
+
+    el.selectedResults = [1, 3];
+    el.result = [...el.data];
+    await el.updateComplete;
+
+    const eventPromise = new Promise<Array<{ id: number; name: string }>>(
+      resolve => {
+        window.addEventListener(
+          'Test_ResultUpdate',
+          (event: Event) => {
+            const customEvent = event as CustomEvent<
+              Array<{ id: number; name: string }>
+            >;
+            resolve(customEvent.detail);
+          },
+          { once: true },
+        );
+      },
+    );
+
+    const submitButton = el.shadowRoot?.querySelector(
+      '#selection-submit-button',
+    ) as HTMLButtonElement;
+    submitButton.click();
+
+    const eventDetail = await eventPromise;
+    expect(eventDetail.map(item => item.id)).to.deep.equal([1, 3]);
+  });
+
+  it('select-all button toggles between selecting all and clearing all', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search
+        name="Test"
+        url="${defaultResultsUrl}"
+        label="Test Label"
+      ></juliusbaer-webcomponent-search>
+    `);
+
+    await el.fetchData();
+    await el.updateComplete;
+
+    el.result = [...el.data];
+    el.selectedResults = [];
+    await el.updateComplete;
+
+    const selectAllButton = el.shadowRoot?.querySelector(
+      '#select-all-button',
+    ) as HTMLButtonElement;
+
+    selectAllButton.click();
+    await el.updateComplete;
+    expect(el.selectedResults).to.deep.equal([0, 1, 2, 3, 4]);
+
+    selectAllButton.click();
+    await el.updateComplete;
+    expect(el.selectedResults).to.deep.equal([]);
+  });
+
   it('when search results are showing, clicking outside of the component will close the results', async () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
