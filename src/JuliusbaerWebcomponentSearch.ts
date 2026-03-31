@@ -45,8 +45,6 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   onClickOutside(event: PointerEvent): void {
     // Check if the clicked element is NOT inside this component
     if (event.target instanceof Node && !this.contains(event.target)) {
-      // console.log('Clicked outside the web component');
-      // Put your logic here (e.g., close a dropdown or modal)
       this.closeMyElement();
     }
   }
@@ -55,7 +53,6 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // Function to close the search dropdown
   closeMyElement(): void {
     // ... logic to hide/close the component ...
-    // console.log('close element function called', this.selectedResults);
     // TODO: Provide a better UX than just flushing the results and textInput values
     // perhaps collapse the results container and reopen it when the user focuses on the input again?
     this.resetForm();
@@ -209,11 +206,9 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // unexplained reason. I suspect Lit is intercepting them. Investigate
   // further if time permits.
   keyboardNav(e: KeyboardEvent, selectedId: number) {
-    // console.log(e);
     if (e.code === 'Space') {
       this.toggleSelectedResult(selectedId);
     }
-    // console.log(this.selectedResults);
   }
 
   // TOGGLE SELECTED RESULT - Add it if its not in the list, remove it if it is
