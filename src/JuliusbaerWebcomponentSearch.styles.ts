@@ -137,11 +137,11 @@ export default function getStyles(): CSSResult {
     }
 
     #results-container.positionAbove {
-      border-radius: 10px 10px 0 0;
+      border-radius: 20px 20px 0 0;
       border-top: 5px solid var(--container-border);
       border-bottom: none;
       bottom: 43px;
-      padding: 15px 10px 50px 20px;
+      padding: 10px 10px 50px 10px;
     }
 
     #results-list {
