@@ -219,7 +219,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
             class="result-item"
             for=${`datarow-${rowData.id}`}
             tabindex="0"
-            @keydown=${(e: KeyboardEvent) => this.keyboardNav(e, Number(rowData.id))}
+            @keydown=${(e: KeyboardEvent) =>
+              this.keyboardNav(e, Number(rowData.id))}
           >
             <input
               class="result-checkbox"
@@ -259,6 +260,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // further if time permits.
   keyboardNav(e: KeyboardEvent, selectedId: number) {
     if (e.code === 'Space') {
+      e.preventDefault();
       this.toggleSelectedResult(selectedId);
     }
   }
@@ -305,8 +307,6 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
 
   // SELECT ALL FEATURE
   selectAllButtonClick(): void {
-    // console.log('result', this.result);
-    // console.log('selectedResults', this.selectedResults);
     const allItemsAreSelected =
       this.selectedResults.length === this.result.length;
 
@@ -377,6 +377,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
                     id="decorative-checkbox"
                     .checked=${this.selectedResults.length ===
                     this.result.length}
+                    inert
                   />
                   SELECT ALL
                 </button>
