@@ -52,21 +52,6 @@ export default function getStyles(): CSSResult {
       margin-left: 5px;
       cursor: pointer;
     }
-    /* 
-    #status-message {
-      margin: 8px 0 0;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: color-mix(in srgb, var(--container-background) 70%, white);
-      border: 1px solid var(--container-border);
-      color: var(--charcoal);
-      font-size: 14px;
-    }
-    #status-message.error {
-      color: #8b1e1e;
-      border-color: #d78787;
-      background: #fce8e8;
-    } */
 
     #search-container {
       position: relative;
@@ -112,7 +97,7 @@ export default function getStyles(): CSSResult {
     #search-input.error:disabled {
       border-color: red;
     }
-    #submit-button {
+    /* #submit-button {
       order: 0;
       flex: 0 1 auto;
       align-self: auto;
@@ -128,48 +113,86 @@ export default function getStyles(): CSSResult {
     }
     #submit-button:active {
       background: var(--cerulean);
+    } */
+
+    #results-container {
+      border-radius: 0 0 10px 10px;
+      padding: 5px 12px 50px 12px;
+      border: 5px solid var(--container-border);
+      border-top: none;
+      background: var(--container-background);
+      transform: translateY(-13px);
+      max-height: 40vh;
+
+      position: absolute;
+      left: 0;
+      right: 0;
     }
 
-    #results-container::-webkit-scrollbar-track {
+    #results-container .result-item:first-child {
+      border-radius: 7px 7px 3px 3px;
+    }
+    #results-container .result-item:last-child {
+      border-radius: 3px 3px 7px 7px;
+    }
+
+    #results-container.positionAbove {
+      border-radius: 10px 10px 0 0;
+      border-top: 5px solid var(--container-border);
+      border-bottom: none;
+      bottom: 43px;
+      padding: 15px 10px 50px 20px;
+    }
+
+    #results-list {
+      max-height: calc(40vh - 30px);
+      overflow-y: auto;
+      background-color: var(--ghost-white);
+      padding: 5px;
+      border-radius: 8px;
+    }
+
+    #results-list::-webkit-scrollbar-track {
       border-radius: 10px;
     }
-    #results-container::-webkit-scrollbar {
+    #results-list::-webkit-scrollbar {
       width: 8px;
     }
-    #results-container::-webkit-scrollbar-thumb {
+    #results-list::-webkit-scrollbar-thumb {
       border-radius: 10px;
       box-shadow: inset 0 0 0 2px var(--cool-sky);
       -webkit-box-shadow: inset 0 0 0 2px var(--cool-sky);
       background-color: var(--cool-sky);
     }
 
-    #results-container {
-      border-radius: 0 0 10px 10px;
-      padding: 5px 10px 15px 20px;
-      border: 5px solid var(--container-border);
-      border-top: none;
-      background: var(--container-background);
-      transform: translateY(-13px);
-      max-height: 40vh;
-      overflow-y: scroll;
-
+    #select-all-container {
       position: absolute;
-      left: 0;
-      right: 0;
+      bottom: 5px;
+      left: 18px;
+      height: 40px;
+      display: flex;
+      align-items: center;
     }
-    #results-container.positionAbove {
-      border-radius: 10px 10px 0 0;
-      border-top: 5px solid var(--container-border);
-      border-bottom: none;
-      bottom: 43px;
-      padding: 15px 10px 5px 20px;
+    #select-all-button {
+      height: 30px;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+    }
+    #decorative-checkbox {
+      pointer-events: none;
+    }
+    #selected-records-detail {
+      margin-left: 10px;
+      font-weight: 600;
     }
 
-    #results-container.positionAbove .result-item:first-child {
-      border-radius: 7px 7px 3px 3px;
-    }
-    #results-container.positionAbove .result-item:last-child {
-      border-radius: 3px;
+    #selection-submit-button {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      padding: 5px;
+      height: 30px;
     }
 
     .result-item {

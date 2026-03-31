@@ -13,7 +13,6 @@ interface SearchItem {
 }
 
 export class JuliusbaerWebcomponentSearch extends LitElement {
-  // CLICK OUTSIDE DETECTION
   constructor() {
     super();
     this.onClickOutside = this.onClickOutside.bind(this);
@@ -21,6 +20,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       this.determineResultsContainerPosition.bind(this);
   }
 
+  // CLICK OUTSIDE DETECTION
   // On Mount, add listeners for detecting clicks outside the search form
   // and detecting scroll position and recalculating result container position
   connectedCallback(): void {
@@ -32,7 +32,6 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
 
   protected updated(changedProperties: PropertyValues<this>): void {
     const previousUrl = changedProperties.get('url');
-
     if (changedProperties.has('url') && (this.url || previousUrl)) {
       queueMicrotask(() => {
         this.fetchData();
@@ -55,13 +54,13 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   onClickOutside(event: PointerEvent): void {
     // Check if the clicked element is NOT inside this component
     if (event.target instanceof Node && !this.contains(event.target)) {
-      this.closeMyElement();
+      this.closeResultsElement();
     }
   }
 
   // CLOSE SEARCH DROPDOWN
   // Function to close the search dropdown
-  closeMyElement(): void {
+  closeResultsElement(): void {
     // ... logic to hide/close the component ...
     // TODO: Provide a better UX than just flushing the results and textInput values
     // perhaps collapse the results container and reopen it when the user focuses on the input again?
@@ -80,18 +79,12 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   static styles = getStyles();
 
   // REACTIVE PROPERTIES
+  // WEB ELEMENT ATTRIBUTES
   // Input Name: Mandatory as required by event broadcaster
   @property({ type: String, attribute: 'name' })
   name = '';
 
-  // Search Input String
-  @property({ type: String })
-  textInput: string = '';
-
-  // ALL Search Data Results
-  @property({ type: Array, attribute: 'data' })
-  data: Array<SearchItem> = [];
-
+  // URL from where the data will be loaded
   @property({ type: String, attribute: 'url' })
   url: string = '';
 
@@ -102,6 +95,15 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // Search Input Label Value
   @property({ type: String, attribute: 'label' })
   label = '';
+
+  // DATA AND STATE
+  // ALL Search Data Results
+  @property({ type: Array, attribute: 'data' })
+  data: Array<SearchItem> = [];
+
+  // Search Input String
+  @property({ type: String })
+  textInput: string = '';
 
   // Filtered Search Data Results (objects from 'data' that contain values that partial match 'textInput')
   @property({ type: Array, attribute: false })
@@ -271,9 +273,10 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       // If its not in the list, add it.
       this.selectedResults = [...this.selectedResults, selectedId];
     }
-    if (this.selectedResults.length > 0) {
-      this.broadcastSelectedResultsEvent(this.selectedResults);
-    }
+  }
+
+  selectionSubmitButtonClick(): void {
+    this.broadcastSelectedResultsEvent(this.selectedResults);
   }
 
   broadcastSelectedResultsEvent(results: Array<number>) {
@@ -296,6 +299,21 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
       return false;
     }
     return true;
+  }
+
+  // SELECT ALL FEATURE
+  selectAllButtonClick(): void {
+    // console.log('result', this.result);
+    // console.log('selectedResults', this.selectedResults);
+    const allItemsAreSelected =
+      this.selectedResults.length === this.result.length;
+
+    if (allItemsAreSelected) {
+      this.selectedResults = [];
+    } else {
+      const allResultIds = this.result.map(resultItem => resultItem.id);
+      this.selectedResults = allResultIds;
+    }
   }
 
   render() {
@@ -335,7 +353,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
         ${!this.isLoading && this.loadError
           ? html`<p id="status-message" class="error" role="alert">
               <span>ERROR:</span> ${this.loadError}
-              <button onclick=${() => this.fetchData()}>RETRY</button>
+              <button @click=${() => this.fetchData()}>RETRY</button>
             </p>`
           : null}
         ${this.result.length > 0
@@ -343,8 +361,36 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
               id="results-container"
               class=${this.displayResultsAboveInput ? 'positionAbove' : ''}
             >
-              ${this.renderRows(this.result, this.textInput)}
-            </div>`
+              <div id="results-list">
+                ${this.renderRows(this.result, this.textInput)}
+              </div>
+              <div id="select-all-container">
+                <button
+                  type="button"
+                  id="select-all-button"
+                  @click=${() => this.selectAllButtonClick()}
+                >
+                  <input
+                    type="checkbox"
+                    id="decorative-checkbox"
+                    .checked=${this.selectedResults.length ===
+                    this.result.length}
+                  />
+                  SELECT ALL
+                </button>
+                <p id="selected-records-detail">
+                  ${this.selectedResults.length} / ${this.result.length} Records
+                  Selected.
+                </p>
+              </div>
+              <button
+                type="button"
+                id="selection-submit-button"
+                @click=${() => this.selectionSubmitButtonClick()}
+              >
+                SUBMIT
+              </button>
+            </div> `
           : null}
       </form>
     `;
