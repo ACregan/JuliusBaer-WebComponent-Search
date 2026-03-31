@@ -147,6 +147,8 @@ The output of this will be placed in the `dist` folder at the project root folde
 </script>
 ``` -->
 
+---
+
 ## Parameters
 
 | Attribute   | optional? | type   | Purpose                                                                                                                                                                                                                                                                                                                                 | Notes                                                |
@@ -195,7 +197,7 @@ Rather late in the development of this project, I found I was not happy with my 
 </script>
 ```
 
-In hindsight, passing the data into an attribute like this is problematic. Especially if implementing the component using the HTML method, like so:
+In hindsight, passing the data into an attribute like this is problematic. I think I've been using React.js too long. This approach is especially cumbersome if implementing the component using the HTML method, like so:
 
 ```html
 <script
@@ -210,17 +212,17 @@ In hindsight, passing the data into an attribute like this is problematic. Espec
 ></juliusbaer-webcomponent-search>
 ```
 
-Ir puts the onus on the implementing developer to Stringify and Parse the JSON data (which could be a huge json file or js array) as required which will be a frustrating developer experience. A better solution is to stick with the tried and trusted method of loading the data inside the component via a URL instead.
+It puts the onus on the implementing developer to Stringify and Parse the JSON data (which could be a huge json file or js array) as required which will be a frustrating developer experience. A better solution is to stick with the tried and trusted method of loading the data inside the component via a URL instead.
 
-This change of approach simplifies the attributes API, provides a better DX and ...
+This change of approach simplifies the attributes API, provides a better DX and is an all-round more battle hardened approach to loading data into our Web Component.
 
 ### Keyboard Navigation
 
-The spec document requested that arrow-keys be used to navigate the results dropdown but that would conflict with accessibility best practices. To capture the up and down arrow key events would prevent the scrolling of the page which would potentially cause problems for users who require accessibility considerations.
+The spec document requested that arrow-keys be used to navigate the results dropdown but that would conflict with accessibility best practices. To capture the up and down arrow key events (to navigate the results for instance) would prevent the scrolling of the page which would potentially cause problems for users who require accessibility considerations.
 
-It is established practice for users to navigate through selectable elements on the page using `TAB` to go forward and `SHIFT+TAB` to go backward through the pages' interactive elements (as determined by the `tabindex` attribute). I decided to stick to this pattern and enabled the selection of rows by rendering each row as a `<label>` element to enable the user to select the row and when interacting with it (via `SPACE`).
+It is established practice for users to navigate through selectable elements on the page using <kbd>TAB</kbd> to go forward and <kbd>SHIFT</kbd> + <kbd>TAB</kbd> to go backward through the pages' interactive elements (as determined by the `tabindex` attribute). I decided to stick to this pattern and enabled the selection of rows by rendering each result row as a `<label>` element to enable the user to select the row and when interacting with it (via <kbd>SPACEBAR</kbd>).
 
-During the implementation of this feature, I encountered a problem: In normal HTML documents the selection of a `<label>` tag that contains a `<input type="checkbox">` should automatically toggle the contained input checkbox, but this was not happening when using keyboard input. I suspect that Lit might be intercepting the keyboard select event for some reason. I spent some time investigating this but I never managed to successfully diagnose the issue (due to time constraints) but I was able to implement a workaround so now the user can use `TAB` and `SHIFT-TAB` to navigate through the results list and use `SPACE` to toggle the selection of results successfully. This solution complies with accessibility practices whilst still enabling the user to navigate the search facility via the keyboard.
+During the implementation of this feature, I encountered a problem: In normal HTML documents the selection of a `<label>` tag that contains a `<input type="checkbox">` should automatically toggle the contained input checkbox, but this was not happening when using keyboard input. I suspect that Lit might be intercepting the keyboard select event for some reason. I spent some time investigating this but I never managed to successfully diagnose the issue (due to time constraints) but I was able to implement a workaround so now the user can use <kbd>TAB</kbd> and <kbd>SHIFT</kbd> + <kbd>TAB</kbd> to navigate through the results list and use <kbd>SPACEBAR</kbd> to toggle the selection of highlighted results successfully. This solution complies with accessibility practices whilst still enabling the user to navigate the search facility via the keyboard.
 
 ---
 
@@ -255,3 +257,9 @@ During the implementation of this feature, I encountered a problem: In normal HT
 - [x] ... Storybook
 
 ---
+
+Thank you for taking the time to review my submission, I look forward to discussing it with you further.
+
+Regards,
+
+Anthony Cregan

@@ -5,6 +5,30 @@ import '../src/juliusbaer-webcomponent-search.js';
 
 describe('JuliusbaerWebcomponentSearch', () => {
   const originalFetch = window.fetch;
+  const defaultResultsUrl = '/api/search-results';
+  const defaultData = [
+    { id: 0, name: 'Case' },
+    { id: 1, name: 'Molly' },
+    { id: 2, name: 'Armitage' },
+    { id: 3, name: 'Riviera' },
+    { id: 4, name: 'Monica' },
+  ];
+
+  beforeEach(() => {
+    window.fetch = (async input => {
+      if (String(input) === defaultResultsUrl) {
+        return new Response(JSON.stringify(defaultData), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      return new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }) as typeof fetch;
+  });
 
   afterEach(() => {
     window.fetch = originalFetch;
@@ -16,12 +40,7 @@ describe('JuliusbaerWebcomponentSearch', () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
         label="Test Label"
-        .data=${[
-          { id: 0, name: 'Case' },
-          { id: 1, name: 'Molly' },
-          { id: 2, name: 'Armitage' },
-          { id: 3, name: 'Riviera' },
-        ]}
+        url="${defaultResultsUrl}"
       >
       </juliusbaer-webcomponent-search>
     `);
@@ -31,10 +50,9 @@ describe('JuliusbaerWebcomponentSearch', () => {
     );
   });
 
-  // 'data' Attribute (mandatory)
-  it('does not render when missing "data" attribute', async () => {
+  it('does not render when missing "url" attribute', async () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
-      <juliusbaer-webcomponent-search name="Test" label="Test Label">
+      <juliusbaer-webcomponent-search name="Test" label="Test Label" url="">
       </juliusbaer-webcomponent-search>
     `);
     // console.log(el.shadowRoot?.innerHTML);
@@ -48,27 +66,25 @@ describe('JuliusbaerWebcomponentSearch', () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
         name="Test"
-        .data=${[
-          { id: 0, name: 'Case' },
-          { id: 1, name: 'Molly' },
-          { id: 2, name: 'Armitage' },
-          { id: 3, name: 'Riviera' },
-        ]}
+        url="${defaultResultsUrl}"
         label="Test Label"
       >
       </juliusbaer-webcomponent-search>
     `);
 
+    await el.fetchData();
+    await el.updateComplete;
+
     expect(el.shadowRoot?.innerHTML).to.contain('Test Label');
   });
-  it('does NOT have a test label when "label" attribute is ommited', async () => {
+  it('does NOT have a label when "label" attribute is ommited', async () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
-      <juliusbaer-webcomponent-search
-        name="Test"
-        data='[{"id":0, "name": "Case"}, {"id":1, "name": "Molly"}, {"id":2, "name": "Armitage"}, {"id":3, "name": "Riviera"}]'
-      >
+      <juliusbaer-webcomponent-search name="Test" url="${defaultResultsUrl}">
       </juliusbaer-webcomponent-search>
     `);
+
+    await el.fetchData();
+    await el.updateComplete;
 
     expect(el.label).to.have.lengthOf(0); // Urgh. Is this REALLY how to check if element does not exist?
   });
@@ -79,16 +95,14 @@ describe('JuliusbaerWebcomponentSearch', () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
         name="Test"
-        .data=${[
-          { id: 0, name: 'Case' },
-          { id: 1, name: 'Molly' },
-          { id: 2, name: 'Armitage' },
-          { id: 3, name: 'Riviera' },
-        ]}
+        url="${defaultResultsUrl}"
         label="Test Label"
       >
       </juliusbaer-webcomponent-search>
     `);
+
+    await el.fetchData();
+    await el.updateComplete;
 
     expect(el.shadowRoot?.innerHTML).to.not.contain('results-container');
   });
@@ -97,15 +111,13 @@ describe('JuliusbaerWebcomponentSearch', () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
         name="Test"
-        .data=${[
-          { id: 0, name: 'Case' },
-          { id: 1, name: 'Molly' },
-          { id: 2, name: 'Armitage' },
-          { id: 3, name: 'Riviera' },
-        ]}
+        url="${defaultResultsUrl}"
         label="Test Label"
       ></juliusbaer-webcomponent-search>
     `);
+
+    await el.fetchData();
+    await el.updateComplete;
 
     const searchInput = el.shadowRoot?.querySelector(
       '#search-input',
@@ -126,16 +138,13 @@ describe('JuliusbaerWebcomponentSearch', () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
         name="Test"
-        .data=${[
-          { id: 0, name: 'Case' },
-          { id: 1, name: 'Molly' },
-          { id: 2, name: 'Armitage' },
-          { id: 3, name: 'Riviera' },
-          { id: 4, name: 'Monica' },
-        ]}
+        url="${defaultResultsUrl}"
         label="Test Label"
       ></juliusbaer-webcomponent-search>
     `);
+
+    await el.fetchData();
+    await el.updateComplete;
 
     const searchInput = el.shadowRoot?.querySelector(
       '#search-input',
@@ -188,15 +197,13 @@ describe('JuliusbaerWebcomponentSearch', () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
         name="Test"
-        .data=${[
-          { id: 0, name: 'Case' },
-          { id: 1, name: 'Molly' },
-          { id: 2, name: 'Armitage' },
-          { id: 3, name: 'Riviera' },
-        ]}
+        url="${defaultResultsUrl}"
         label="Test Label"
       ></juliusbaer-webcomponent-search>
     `);
+
+    await el.fetchData();
+    await el.updateComplete;
 
     const searchInput = el.shadowRoot?.querySelector(
       '#search-input',
@@ -253,11 +260,10 @@ describe('JuliusbaerWebcomponentSearch', () => {
     }) as typeof fetch;
 
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
-      <juliusbaer-webcomponent-search name="Test">
+      <juliusbaer-webcomponent-search name="Test" url="/api/search-results">
       </juliusbaer-webcomponent-search>
     `);
 
-    el.url = '/api/search-results';
     await el.fetchData();
     await el.updateComplete;
 
@@ -278,11 +284,13 @@ describe('JuliusbaerWebcomponentSearch', () => {
     }) as typeof fetch;
 
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
-      <juliusbaer-webcomponent-search name="Test">
+      <juliusbaer-webcomponent-search
+        name="Test"
+        url="/api/pending-search-results"
+      >
       </juliusbaer-webcomponent-search>
     `);
 
-    el.url = '/api/pending-search-results';
     await el.updateComplete;
     await Promise.resolve();
     await el.updateComplete;
@@ -295,7 +303,7 @@ describe('JuliusbaerWebcomponentSearch', () => {
     ) as HTMLInputElement;
 
     expect(el.isLoading).to.equal(true);
-    expect(statusMessage.textContent).to.contain('Loading search data...');
+    expect(statusMessage.textContent).to.contain('DATA: Loading...');
     expect(searchInput.disabled).to.equal(true);
 
     resolveFetch?.(
@@ -317,11 +325,13 @@ describe('JuliusbaerWebcomponentSearch', () => {
       })) as typeof fetch;
 
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
-      <juliusbaer-webcomponent-search name="Test">
+      <juliusbaer-webcomponent-search
+        name="Test"
+        url="/api/failing-search-results"
+      >
       </juliusbaer-webcomponent-search>
     `);
 
-    el.url = '/api/failing-search-results';
     await el.updateComplete;
     await Promise.resolve();
     await el.updateComplete;
@@ -336,22 +346,15 @@ describe('JuliusbaerWebcomponentSearch', () => {
     expect(el.data).to.deep.equal([]);
     expect(el.loadError).to.equal('HTTP 500');
     expect(el.isLoading).to.equal(false);
-    expect(statusMessage.textContent).to.contain(
-      'Unable to load search data: HTTP 500',
-    );
-    expect(searchInput.disabled).to.equal(false);
+    expect(statusMessage.textContent).to.contain('ERROR: HTTP 500');
+    expect(searchInput.disabled).to.equal(true);
   });
 
   it('when search results are showing, clicking outside of the component will close the results', async () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
         name="Test"
-        .data=${[
-          { id: 0, name: 'Case' },
-          { id: 1, name: 'Molly' },
-          { id: 2, name: 'Armitage' },
-          { id: 3, name: 'Riviera' },
-        ]}
+        url="${defaultResultsUrl}"
         label="Test Label"
       ></juliusbaer-webcomponent-search>
       <hr />
@@ -359,6 +362,9 @@ describe('JuliusbaerWebcomponentSearch', () => {
         SOME RANDOM TEXT OUTSIDE OF SHADOW DOM
       </p>
     `);
+
+    await el.fetchData();
+    await el.updateComplete;
 
     const searchInput = el.shadowRoot?.querySelector(
       '#search-input',
