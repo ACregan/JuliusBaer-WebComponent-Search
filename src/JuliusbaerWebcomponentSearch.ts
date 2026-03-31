@@ -219,15 +219,17 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
             class="result-item"
             for=${`datarow-${rowData.id}`}
             tabindex="0"
-            @keydown=${(e: any) => this.keyboardNav(e, Number(rowData.id))}
+            @keydown=${(e: KeyboardEvent) => this.keyboardNav(e, Number(rowData.id))}
           >
             <input
               class="result-checkbox"
               type="checkbox"
               id=${`datarow-${rowData.id}`}
               .value=${rowData.id}
-              @click=${(e: any) =>
-                this.toggleSelectedResult(Number(e.target.value))}
+              @click=${(e: MouseEvent) =>
+                this.toggleSelectedResult(
+                  Number((e.target as HTMLInputElement).value),
+                )}
               .checked=${this.selectedResults.includes(rowData.id)}
               inert
             />
