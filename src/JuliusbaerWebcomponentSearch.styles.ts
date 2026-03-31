@@ -138,7 +138,7 @@ export default function getStyles(): CSSResult {
 
     #results-container.positionAbove {
       border-radius: 20px 20px 0 0;
-      border-top: 5px solid var(--container-border);
+      border-top: 5px solid var(--dark-grey);
       border-bottom: none;
       bottom: 43px;
       padding: 10px 10px 50px 10px;
@@ -316,8 +316,20 @@ export default function getStyles(): CSSResult {
         background: var(--cool-sky);
       }
 
+      #results-list {
+        background: var(--darker-grey);
+        border-color: black;
+      }
+      #results-list::-webkit-scrollbar-thumb {
+        border: 1px solid var(--darker-grey);
+      }
+
+      #selected-records-detail {
+        color: var(--ghost-white);
+      }
+
       .result-item {
-        border-color: var(--grey);
+        border-color: black;
       }
       .result-cell-key {
         color: var(--thistle);
