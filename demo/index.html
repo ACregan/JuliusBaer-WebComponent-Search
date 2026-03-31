@@ -150,32 +150,31 @@
       >
     </p>
 
-    <!-- HTML WAY
+    <!-- HTML WAY    -->
     <script
       type="module"
       src="../dist/src/juliusbaer-webcomponent-search.js"
     ></script>
-    <juliusbaer-webcomponent-search
-      name="Transactions"
-      data='[{"id":0,"name":"Case","role":"Cowboy"},{"id":1,"name":"Molly","role":"Razor Girl"},{"id":2,"name":"Armitage","role":"Major"},{"id":3,"name":"Riviera","role":"Illusionist"}]'
-      label="Transactions"
-      placeholder="What can I help you with?"
-    ></juliusbaer-webcomponent-search>
-    -->
+    <div id="search-container">
+      <juliusbaer-webcomponent-search
+        name="Transactions"
+        url="https://raw.githubusercontent.com/ACregan/JuliusBaer-WebComponent-Search/refs/heads/main/src/data/transactions.json"
+        label="Transactions"
+        placeholder="What can I help you with?"
+      ></juliusbaer-webcomponent-search>
+    </div>
 
     <!-- JS SCRIPT WAY-->
-    <div id="search-container"></div>
+    <!-- <div id="search-container"></div>
     <script type="module">
       import { html, render } from 'lit';
       import '../dist/src/juliusbaer-webcomponent-search.js';
-      // import accountData from '../dist/src/data/accounts.js';
-      import transactionData from '../dist/src/data/transactions.js';
 
       render(
         html`
           <juliusbaer-webcomponent-search
             name="Transactions"
-            .data=${transactionData}
+            url="https://raw.githubusercontent.com/ACregan/JuliusBaer-WebComponent-Search/refs/heads/main/src/data/transactions.json"
             label="Transactions"
             placeholder="What can I help you with?"
           >
@@ -183,7 +182,7 @@
         `,
         document.querySelector('#search-container'),
       );
-    </script>
+    </script> -->
 
     <p>
       <em>

@@ -94,7 +94,7 @@ npm run format
 
 ## Build
 
-To create a build of this Web Component for use in external applications run:
+To create a build of this Web Component for use in external applications please run:
 
 ```bash
 npm run build
@@ -112,9 +112,9 @@ The output of this will be placed in the `dist` folder at the project root folde
 </script>
 
 <juliusbaer-webcomponent-search
-  name="Crew"
-  data='[{"id":0,"name":"Case","role":"Cowboy"},{"id":1,"name":"Molly","role":"Razor Girl"},{"id":2,"name":"Armitage","role":"Major"},{"id":3,"name":"Riviera","role":"Illusionist"}]'
-  label="The Crew"
+  name="Name_Of_Search_Data"
+  url="https://domain.com/path/to/data/file.json"
+  label="A Label"
   placeholder="Type to search."
 >
 </juliusbaer-webcomponent-search>
@@ -149,12 +149,12 @@ The output of this will be placed in the `dist` folder at the project root folde
 
 ## Parameters
 
-| Attribute   | optional? | type   | Purpose                                                                                                                                                                                                                                                                                                                       | Notes                                                |
-| ----------- | --------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| name        | required  | string | a string that acts as a unique identifier for this search facility. It will be used to determine the name of the event broadcast with the results of the search. e.g. a name of "Accounts" will result in the name of the event being "Accounts_ResultUpdate" which you will need to subscribe to these events in a listener. | Refrain from using spaces.                           |
-| data        | requred   | array  | an array of objects containing the data you wish to search. Each object item requires an id(number) but other than that, the data can be any number of key/value pairs and can also accommodate nested objects.                                                                                                               | Each top-level object requires a unique numeric 'id' |
-| label       | optional  | string | a text label that sits above the search window to indicate what data the search facility will search through.                                                                                                                                                                                                                 |                                                      |
-| placeholder | optional  | string | a text label to act as a short written indicator to prompt the user to use the search input.                                                                                                                                                                                                                                  |                                                      |
+| Attribute   | optional? | type   | Purpose                                                                                                                                                                                                                                                                                                                                 | Notes                                                |
+| ----------- | --------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| name        | required  | string | a string that acts as a unique identifier for this search facility. It will be used to determine the name of the event broadcast with the results of the search. e.g. a name of "Accounts" will result in the name of the event being "Accounts_ResultUpdate" which you will need to subscribe to these events in a listener.           | Refrain from using spaces.                           |
+| url         | required  | string | a URL string that is the resource that will provide the data through which the user will be able to search. This data should be an array of objects, in JSON format. Each object item requires an id(number) but other than that, the data can be any number of key/value pairs and can also accommodate nested data and other objects. | Each top-level object requires a unique numeric 'id' |
+| label       | optional  | string | a text label that sits above the search window to indicate what data the search facility will search through.                                                                                                                                                                                                                           |                                                      |
+| placeholder | optional  | string | a text label to act as a short written indicator to prompt the user to use the search input.                                                                                                                                                                                                                                            |                                                      |
 
 ---
 
@@ -162,11 +162,65 @@ The output of this will be placed in the `dist` folder at the project root folde
 
 ### Framework Choice
 
-Having reviewed the popular options available I have decided to implement the spec requirements using Lit. This was the obvious choice over its competetors (Stencil, Fast etc) due to its popular and active eco-system, this provides an abundance of sources for documentation and troubleshooting. It is maintained by the Google Chrome team providing first-class, dog-fooded support from the developers of the worlds pre-eminent browser.
+Having reviewed the popular options available I have decided to implement the spec requirements using Lit. This was the obvious choice over its competetors (Stencil, Fast etc) due to its popular and active eco-system, this provides an abundance of sources for documentation and troubleshooting. It is maintained by the Google Chrome team, thus providing first-class, dog-fooded support from the developers of the worlds pre-eminent browser.
 
 The runtime library driven approach that Lit takes, might have the downside of dependency (a mere 5kb) but it also negates the need for compilation (which Stencil requires) while enabling quicker development and iteration. Time was a deciding factor for me personally; negating the need to setup a build system and the shallower learning curve of Lit was what ultimately made me opt for Lit over Stencil in this case.
 
 SOURCE: https://medium.com/@mz.ebrahimi/a-comparative-analysis-of-stencil-core-and-lit-element-choosing-the-right-tool-for-web-component-1ea02a516252
+
+### Data Loading Approach
+
+Rather late in the development of this project, I found I was not happy with my initial decision to load the data via javascript at the point of rendering like so (see: `import transactionData from '../dist/src/data/transactions.js';` and `.data=${transactionData}`):
+
+```html
+<div id="search-container"></div>
+<script type="module">
+  import { html, render } from 'lit';
+  import '../dist/src/juliusbaer-webcomponent-search.js';
+  // import accountData from '../dist/src/data/accounts.js';
+  import transactionData from '../dist/src/data/transactions.js';
+
+  render(
+    html`
+      <juliusbaer-webcomponent-search
+        name="Transactions"
+        .data=${transactionData}
+        label="Transactions"
+        placeholder="What can I help you with?"
+      >
+      </juliusbaer-webcomponent-search>
+    `,
+    document.querySelector('#search-container'),
+  );
+</script>
+```
+
+In hindsight, passing the data into an attribute like this is problematic. Especially if implementing the component using the HTML method, like so:
+
+```html
+<script
+  type="module"
+  src="../dist/src/juliusbaer-webcomponent-search.js"
+></script>
+<juliusbaer-webcomponent-search
+  name="Transactions"
+  data='[{"id":0,"name":"Case","role":"Cowboy"},{"id":1,"name":"Molly","role":"Razor Girl"},{"id":2,"name":"Armitage","role":"Major"},{"id":3,"name":"Riviera","role":"Illusionist"}]'
+  label="Transactions"
+  placeholder="What can I help you with?"
+></juliusbaer-webcomponent-search>
+```
+
+Ir puts the onus on the implementing developer to Stringify and Parse the JSON data (which could be a huge json file or js array) as required which will be a frustrating developer experience. A better solution is to stick with the tried and trusted method of loading the data inside the component via a URL instead.
+
+This change of approach simplifies the attributes API, provides a better DX and ...
+
+### Keyboard Navigation
+
+The spec document requested that arrow-keys be used to navigate the results dropdown but that would conflict with accessibility best practices. To capture the up and down arrow key events would prevent the scrolling of the page which would potentially cause problems for users who require accessibility considerations.
+
+It is established practice for users to navigate through selectable elements on the page using `TAB` to go forward and `SHIFT+TAB` to go backward through the pages' interactive elements (as determined by the `tabindex` attribute). I decided to stick to this pattern and enabled the selection of rows by rendering each row as a `<label>` element to enable the user to select the row and when interacting with it (via `SPACE`).
+
+During the implementation of this feature, I encountered a problem: In normal HTML documents the selection of a `<label>` tag that contains a `<input type="checkbox">` should automatically toggle the contained input checkbox, but this was not happening when using keyboard input. I suspect that Lit might be intercepting the keyboard select event for some reason. I spent some time investigating this but I never managed to successfully diagnose the issue (due to time constraints) but I was able to implement a workaround so now the user can use `TAB` and `SHIFT-TAB` to navigate through the results list and use `SPACE` to toggle the selection of results successfully. This solution complies with accessibility practices whilst still enabling the user to navigate the search facility via the keyboard.
 
 ---
 
@@ -182,6 +236,9 @@ SOURCE: https://medium.com/@mz.ebrahimi/a-comparative-analysis-of-stencil-core-a
 - [x] ... With Keyboard Navigation.
 - [x] ... With Results Being Keyboard Navigatable.
 - [x] ... With Dynamic Positioning: Results Being Displayed above Search facility if space below is not sufficient.
+- [x] Load Data from URL
+- [x] ... With Loading State
+- [x] ... With Error Notices and Retry Button
 - [x] Dropdown overlays content below search input
 - [x] Dark /Light Mode support ...
 - [x] ... honors browser settings

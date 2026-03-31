@@ -4,7 +4,10 @@ import { JuliusbaerWebcomponentSearch } from '../src/JuliusbaerWebcomponentSearc
 import '../src/juliusbaer-webcomponent-search.js';
 
 describe('JuliusbaerWebcomponentSearch', () => {
+  const originalFetch = window.fetch;
+
   afterEach(() => {
+    window.fetch = originalFetch;
     fixtureCleanup();
   });
   // ATTRIBUTES
@@ -237,6 +240,106 @@ describe('JuliusbaerWebcomponentSearch', () => {
     } finally {
       rootContainer.getBoundingClientRect = originalGetBoundingClientRect;
     }
+  });
+
+  it('fetches data from the url property and stores it in data', async () => {
+    window.fetch = (async input => {
+      expect(String(input)).to.equal('/api/search-results');
+
+      return new Response(JSON.stringify([{ id: 10, name: 'Monica' }]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }) as typeof fetch;
+
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search name="Test">
+      </juliusbaer-webcomponent-search>
+    `);
+
+    el.url = '/api/search-results';
+    await el.fetchData();
+    await el.updateComplete;
+
+    expect(el.data).to.deep.equal([{ id: 10, name: 'Monica' }]);
+    expect(el.loadError).to.equal('');
+    expect(el.isLoading).to.equal(false);
+  });
+
+  it('renders a loading state while url data is being fetched', async () => {
+    let resolveFetch: ((value: Response) => void) | undefined;
+
+    window.fetch = (input => {
+      expect(String(input)).to.equal('/api/pending-search-results');
+
+      return new Promise<Response>(resolve => {
+        resolveFetch = resolve;
+      });
+    }) as typeof fetch;
+
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search name="Test">
+      </juliusbaer-webcomponent-search>
+    `);
+
+    el.url = '/api/pending-search-results';
+    await el.updateComplete;
+    await Promise.resolve();
+    await el.updateComplete;
+
+    const statusMessage = el.shadowRoot?.querySelector(
+      '#status-message',
+    ) as HTMLElement;
+    const searchInput = el.shadowRoot?.querySelector(
+      '#search-input',
+    ) as HTMLInputElement;
+
+    expect(el.isLoading).to.equal(true);
+    expect(statusMessage.textContent).to.contain('Loading search data...');
+    expect(searchInput.disabled).to.equal(true);
+
+    resolveFetch?.(
+      new Response(JSON.stringify([{ id: 11, name: 'Case' }]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+
+    await Promise.resolve();
+    await el.updateComplete;
+  });
+
+  it('renders an error state when url data loading fails', async () => {
+    window.fetch = (async () =>
+      new Response(JSON.stringify({ message: 'nope' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      })) as typeof fetch;
+
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search name="Test">
+      </juliusbaer-webcomponent-search>
+    `);
+
+    el.url = '/api/failing-search-results';
+    await el.updateComplete;
+    await Promise.resolve();
+    await el.updateComplete;
+
+    const statusMessage = el.shadowRoot?.querySelector(
+      '#status-message',
+    ) as HTMLElement;
+    const searchInput = el.shadowRoot?.querySelector(
+      '#search-input',
+    ) as HTMLInputElement;
+
+    expect(el.data).to.deep.equal([]);
+    expect(el.loadError).to.equal('HTTP 500');
+    expect(el.isLoading).to.equal(false);
+    expect(statusMessage.textContent).to.contain(
+      'Unable to load search data: HTTP 500',
+    );
+    expect(searchInput.disabled).to.equal(false);
   });
 
   it('when search results are showing, clicking outside of the component will close the results', async () => {

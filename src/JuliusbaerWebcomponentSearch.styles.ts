@@ -29,6 +29,45 @@ export default function getStyles(): CSSResult {
       width: 100%;
       margin-top: 20px;
     }
+    #status-message {
+      position: absolute;
+      top: -20px;
+      right: 12px;
+      height: 20px;
+      margin: 0;
+
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px 0 10px;
+      border-radius: 5px 5px 0 0;
+      background: var(--container-border);
+      color: var(--charcoal);
+    }
+    #status-message.error span {
+      color: red;
+    }
+    #status-message.error button {
+      font-size: 11px;
+      transform: translateY(-2px);
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    /* 
+    #status-message {
+      margin: 8px 0 0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--container-background) 70%, white);
+      border: 1px solid var(--container-border);
+      color: var(--charcoal);
+      font-size: 14px;
+    }
+    #status-message.error {
+      color: #8b1e1e;
+      border-color: #d78787;
+      background: #fce8e8;
+    } */
+
     #search-container {
       position: relative;
       display: flex;
@@ -67,6 +106,12 @@ export default function getStyles(): CSSResult {
       border: 1px solid var(--container-border);
       border-radius: 4px;
     }
+    #search-input:disabled {
+      cursor: not-allowed;
+    }
+    #search-input.error:disabled {
+      border-color: red;
+    }
     #submit-button {
       order: 0;
       flex: 0 1 auto;
@@ -93,6 +138,7 @@ export default function getStyles(): CSSResult {
     }
     #results-container::-webkit-scrollbar-thumb {
       border-radius: 10px;
+      box-shadow: inset 0 0 0 2px var(--cool-sky);
       -webkit-box-shadow: inset 0 0 0 2px var(--cool-sky);
       background-color: var(--cool-sky);
     }
@@ -220,6 +266,18 @@ export default function getStyles(): CSSResult {
         background: var(--grey);
         color: var(--ghost-white);
       }
+
+      #status-message {
+        background: var(--charcoal);
+        border-color: var(--dark-grey);
+        color: var(--ghost-white);
+      }
+      #status-message.error {
+        border-color: #d78787;
+        background: #5c2323;
+        color: #ffe6e6;
+      }
+
       #search-input::-webkit-search-cancel-button {
         color: white;
         background: white;

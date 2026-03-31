@@ -1,4 +1,4 @@
-import { html, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, PropertyValues, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import {
   findValueInNestedObject,
@@ -28,6 +28,16 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     // Add the global listener when the component is added to the DOM
     document.addEventListener('click', this.onClickOutside);
     document.addEventListener('scroll', this.determineResultsContainerPosition);
+  }
+
+  protected updated(changedProperties: PropertyValues<this>): void {
+    const previousUrl = changedProperties.get('url');
+
+    if (changedProperties.has('url') && (this.url || previousUrl)) {
+      queueMicrotask(() => {
+        this.fetchData();
+      });
+    }
   }
 
   // On Dismount, remove the listeners
@@ -79,8 +89,11 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   textInput: string = '';
 
   // ALL Search Data Results
-  @property({ type: Array, attribute: 'search-data' })
+  @property({ type: Array, attribute: 'data' })
   data: Array<SearchItem> = [];
+
+  @property({ type: String, attribute: 'url' })
+  url: string = '';
 
   // Search Input Placeholder String
   @property({ type: String, attribute: 'placeholder' })
@@ -101,6 +114,41 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // Boolean to force position of element
   @property({ type: Boolean })
   displayResultsAboveInput = false;
+
+  @property({ type: Boolean, attribute: false })
+  isLoading = false;
+
+  @property({ type: String, attribute: false })
+  loadError = '';
+
+  // FETCH DATA
+  async fetchData(): Promise<void> {
+    if (!this.url) {
+      this.isLoading = false;
+      this.loadError = '';
+      this.data = [];
+      return;
+    }
+
+    this.isLoading = true;
+    this.loadError = '';
+
+    try {
+      const response = await fetch(this.url);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const fetchedData = await response.json();
+      this.data = Array.isArray(fetchedData) ? fetchedData : [];
+    } catch (error) {
+      this.data = [];
+      this.loadError =
+        error instanceof Error ? error.message : 'Unable to load search data.';
+    } finally {
+      this.isLoading = false;
+    }
+  }
 
   // CALCULATE WHERE TO DISPLAY RESULT - to be called on search input
   // If the input is nearer to the bottom of the viewport then display the results above the input
@@ -129,8 +177,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     });
   }
 
-  // RESULT ROW RENDERER: Recursive function that itterates over object returns row
-  // at top level or column cell if nested within object
+  // RESULT ROW RENDERER: Recursive function that iterates over object and
+  // returns row at top level or returns a column cell if nested within object
   renderRows(
     rowData: any,
     searchString: string,
@@ -244,7 +292,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     if (!this.name || this.name === '') {
       return false;
     }
-    if (this.data.length < 1) {
+    if (this.data.length < 1 && !this.url) {
       return false;
     }
     return true;
@@ -272,11 +320,24 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
           <input
             id="search-input"
             type="search"
-            placeholder=${this.placeholder}
+            placeholder=${this.loadError
+              ? 'ERROR Loading Data.'
+              : this.placeholder}
             @input=${this.onInput}
             .value=${this.textInput}
+            ?disabled=${this.isLoading || !!this.loadError}
+            class=${this.loadError ? 'error' : ''}
           />
         </div>
+        ${this.isLoading
+          ? html`<p id="status-message" role="status">DATA: Loading...</p>`
+          : null}
+        ${!this.isLoading && this.loadError
+          ? html`<p id="status-message" class="error" role="alert">
+              <span>ERROR:</span> ${this.loadError}
+              <button onclick=${() => this.fetchData()}>RETRY</button>
+            </p>`
+          : null}
         ${this.result.length > 0
           ? html`<div
               id="results-container"
