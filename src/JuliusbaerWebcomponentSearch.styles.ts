@@ -19,7 +19,6 @@ export default function getStyles(): CSSResult {
       --container-border: var(--thistle);
 
       display: block;
-      padding: 25px;
       color: var(--charcoal, #000);
       font-family:
         'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
