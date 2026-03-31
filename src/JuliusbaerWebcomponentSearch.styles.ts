@@ -150,19 +150,21 @@ export default function getStyles(): CSSResult {
       background-color: var(--ghost-white);
       padding: 5px;
       border-radius: 8px;
+      border: 1px solid var(--thistle);
     }
 
     #results-list::-webkit-scrollbar-track {
       border-radius: 10px;
     }
     #results-list::-webkit-scrollbar {
-      width: 8px;
+      width: 10px;
     }
     #results-list::-webkit-scrollbar-thumb {
       border-radius: 10px;
       box-shadow: inset 0 0 0 2px var(--cool-sky);
       -webkit-box-shadow: inset 0 0 0 2px var(--cool-sky);
       background-color: var(--cool-sky);
+      border: 1px solid #ffffff;
     }
 
     #select-all-container {
