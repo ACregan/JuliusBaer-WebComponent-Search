@@ -17,6 +17,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   constructor() {
     super();
     this.onClickOutside = this.onClickOutside.bind(this);
+    this.determineResultsContainerPosition =
+      this.determineResultsContainerPosition.bind(this);
   }
 
   // On Mount, add listeners for detecting clicks outside the search form
@@ -100,28 +102,22 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   selectedResults: Array<number> = [];
 
   // Boolean to force position of element
-  @property({ type: Boolean, attribute: false })
+  @property({ type: Boolean })
   displayResultsAboveInput = false;
 
   // CALCULATE WHERE TO DISPLAY RESULT - to be called on search input
   // If the input is nearer to the bottom of the viewport then display the results above the input
-  determineResultsContainerPosition() {
-    if (this.shadowRoot) {
-      const element = this.shadowRoot.getElementById('root-container');
-      if (element) {
-        const elementRect = element.getBoundingClientRect();
-        const spaceAbove = elementRect.top;
-        const spaceBelow = window.innerHeight - elementRect.bottom;
-
-        if (spaceBelow < spaceAbove) {
-          // logic to render with more space above input
-          this.displayResultsAboveInput = true;
-        } else {
-          // logic to render with more (or equal) space on bottom
-          this.displayResultsAboveInput = false;
-        }
-      }
+  determineResultsContainerPosition(): void {
+    const rootContainer = this.renderRoot?.querySelector('#root-container');
+    if (!(rootContainer instanceof HTMLElement)) {
+      return;
     }
+
+    const elementRect = rootContainer.getBoundingClientRect();
+    const spaceAbove = elementRect.top;
+    const spaceBelow = window.innerHeight - elementRect.bottom;
+
+    this.displayResultsAboveInput = spaceBelow < spaceAbove;
   }
 
   // SUBMIT SEARCH

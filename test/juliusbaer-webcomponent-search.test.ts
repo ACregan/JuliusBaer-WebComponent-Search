@@ -181,6 +181,64 @@ describe('JuliusbaerWebcomponentSearch', () => {
     expect(el.selectedResults).to.deep.equal([firstResultId, secondResultId]);
   });
 
+  it('toggles the results container class when displayResultsAboveInput changes', async () => {
+    const el = await fixture<JuliusbaerWebcomponentSearch>(html`
+      <juliusbaer-webcomponent-search
+        name="Test"
+        .data=${[
+          { id: 0, name: 'Case' },
+          { id: 1, name: 'Molly' },
+          { id: 2, name: 'Armitage' },
+          { id: 3, name: 'Riviera' },
+        ]}
+        label="Test Label"
+      ></juliusbaer-webcomponent-search>
+    `);
+
+    const searchInput = el.shadowRoot?.querySelector(
+      '#search-input',
+    ) as HTMLInputElement;
+    searchInput.value = 'MO';
+    searchInput.dispatchEvent(
+      new Event('input', { bubbles: true, composed: true }),
+    );
+    await el.updateComplete;
+
+    const rootContainer = el.shadowRoot?.querySelector(
+      '#root-container',
+    ) as HTMLElement;
+    const originalGetBoundingClientRect = rootContainer.getBoundingClientRect;
+
+    rootContainer.getBoundingClientRect = () =>
+      ({
+        x: 0,
+        y: 700,
+        width: 300,
+        height: 80,
+        top: 700,
+        right: 300,
+        bottom: 780,
+        left: 0,
+        toJSON: () => ({}),
+      }) as DOMRect;
+
+    try {
+      el.determineResultsContainerPosition();
+      await el.updateComplete;
+
+      const resultsContainer = el.shadowRoot?.querySelector(
+        '#results-container',
+      ) as HTMLElement;
+
+      expect(el.displayResultsAboveInput).to.equal(true);
+      expect(resultsContainer.classList.contains('positionAbove')).to.equal(
+        true,
+      );
+    } finally {
+      rootContainer.getBoundingClientRect = originalGetBoundingClientRect;
+    }
+  });
+
   it('when search results are showing, clicking outside of the component will close the results', async () => {
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
       <juliusbaer-webcomponent-search
