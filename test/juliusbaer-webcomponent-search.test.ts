@@ -46,7 +46,7 @@ describe('JuliusbaerWebcomponentSearch', () => {
     `);
     // console.log(el.shadowRoot?.innerHTML);
     expect(el.shadowRoot?.innerHTML).to.contain(
-      'WARNING: Mandatory Attributes Are Missing.',
+      'Mandatory Attributes Are Missing.',
     );
   });
 
@@ -57,7 +57,7 @@ describe('JuliusbaerWebcomponentSearch', () => {
     `);
     // console.log(el.shadowRoot?.innerHTML);
     expect(el.shadowRoot?.innerHTML).to.contain(
-      'WARNING: Mandatory Attributes Are Missing.',
+      'Mandatory Attributes Are Missing.',
     );
   });
 
