@@ -36,7 +36,7 @@ npm install
 
 ## Demo
 
-Now that we have cloned the project and installed the dependancies, we can run the project locally to see its features in action:
+Now that we have cloned the project and installed the dependencies, we can run the project locally to see its features in action:
 
 ```bash
 npm run start
@@ -174,9 +174,9 @@ SOURCE: https://medium.com/@mz.ebrahimi/a-comparative-analysis-of-stencil-core-a
 
 The spec document requested that arrow-keys be used to navigate the results dropdown but that would conflict with accessibility best practices. To capture the up and down arrow key events (to navigate the results for instance) would prevent the scrolling of the page which would potentially cause problems for users who require accessibility considerations.
 
-It is established practice for users to navigate through selectable elements on the page using <kbd>TAB</kbd> to go forward and <kbd>SHIFT</kbd> + <kbd>TAB</kbd> to go backward through the pages' interactive elements (as determined by the `tabindex` attribute). I decided to stick to this pattern and enabled the selection of rows by rendering each result row as a `<label>` element to enable the user to select the row and when interacting with it (via <kbd>SPACEBAR</kbd>).
+It is established practice for users to navigate through selectable elements on the page using <kbd>TAB</kbd> to go forward and <kbd>SHIFT</kbd> + <kbd>TAB</kbd> to go backward through the pages' interactive elements (as determined by the `tabindex` attribute). I decided to stick to this pattern and enabled the selection of rows by rendering each result row as a `<label>` element to enable the user to select the row and when interacting with it (via <kbd>SPACE BAR</kbd>).
 
-During the implementation of this feature, I encountered a problem: In normal HTML documents the selection of a `<label>` tag that contains a `<input type="checkbox">` should automatically toggle the contained input checkbox, but this was not happening when using keyboard input. I suspect that Lit might be intercepting the keyboard select event for some reason. I spent some time investigating this but I never managed to successfully diagnose the issue (due to time constraints) but I was able to implement a workaround so now the user can use <kbd>TAB</kbd> and <kbd>SHIFT</kbd> + <kbd>TAB</kbd> to navigate through the results list and use <kbd>SPACEBAR</kbd> to toggle the selection of highlighted results successfully. This solution complies with accessibility practices whilst still enabling the user to navigate the search facility via the keyboard.
+During the implementation of this feature, I encountered a problem: In normal HTML documents the selection of a `<label>` tag that contains a `<input type="checkbox">` should automatically toggle the contained input checkbox, but this was not happening when using keyboard input. I suspect that Lit might be intercepting the keyboard select event for some reason. I spent some time investigating this but I never managed to successfully diagnose the issue (due to time constraints) but I was able to implement a workaround so now the user can use <kbd>TAB</kbd> and <kbd>SHIFT</kbd> + <kbd>TAB</kbd> to navigate through the results list and use <kbd>SPACE BAR</kbd> to toggle the selection of highlighted results successfully. This solution complies with accessibility practices whilst still enabling the user to navigate the search facility via the keyboard.
 
 ---
 
@@ -238,7 +238,7 @@ This change of approach simplifies the attributes API, provides a better DX and 
 - [x] ... With Placeholder Text.
 - [x] ... With Multiple Selectable Results (checkboxes?).
 - [x] ... With Keyboard Navigation.
-- [x] ... With Results Being Keyboard Navigatable.
+- [x] ... With Results Being Keyboard Navigable.
 - [x] ... With Dynamic Positioning: Results Being Displayed above Search facility if space below is not sufficient.
 - [x] Load Data from URL
 - [x] ... With Loading State
