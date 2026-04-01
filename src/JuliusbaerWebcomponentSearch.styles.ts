@@ -8,7 +8,9 @@ export default function getStyles(): CSSResult {
       --thistle: #c5c5c5;
       --charcoal: #524f53;
       --cerulean: #2d728f;
+      --cerulean--light: #557c8d;
       --cool-sky: #35a7ff;
+      --cool-sky--light: #6cbfff;
       --banana: #ffe74c;
 
       --grey: #878787;
@@ -138,7 +140,7 @@ export default function getStyles(): CSSResult {
 
     #results-container.positionAbove {
       border-radius: 20px 20px 0 0;
-      border-top: 5px solid var(--dark-grey);
+      border-top: 5px solid var(--container-border);
       border-bottom: none;
       bottom: 43px;
       padding: 10px 10px 50px 10px;
@@ -176,13 +178,24 @@ export default function getStyles(): CSSResult {
       align-items: center;
     }
     #select-all-button {
-      height: 30px;
-      padding: 5px;
+      height: 34px;
+      padding: 10px;
       display: flex;
       align-items: center;
+      cursor: pointer;
+
+      box-sizing: border-box;
+      background: var(--cerulean);
+      color: var(--ghost-white);
+      border: 3px solid var(--cool-sky);
+      border-radius: 3px;
+    }
+    #select-all-button:hover {
+      background: var(--cerulean--light);
     }
     #decorative-checkbox {
       pointer-events: none;
+      margin: 0 11px 0 3px;
     }
     #selected-records-detail {
       margin-left: 10px;
@@ -191,10 +204,30 @@ export default function getStyles(): CSSResult {
 
     #selection-submit-button {
       position: absolute;
-      bottom: 10px;
-      right: 12px;
-      padding: 5px;
-      height: 30px;
+      bottom: 8px;
+      right: 15px;
+      height: 34px;
+      padding: 7px;
+      cursor: pointer;
+
+      box-sizing: border-box;
+      background: var(--cerulean);
+      color: var(--ghost-white);
+      border: 3px solid var(--cool-sky);
+      border-radius: 3px;
+    }
+    #selection-submit-button:hover {
+      background: var(--cerulean--light);
+    }
+
+    #select-all-button,
+    #selection-submit-button {
+      background: var(--cool-sky);
+      border: 3px solid var(--cerulean);
+    }
+    #select-all-button:hover,
+    #selection-submit-button:hover {
+      background: var(--cool-sky--light);
     }
 
     .result-item {
@@ -215,7 +248,7 @@ export default function getStyles(): CSSResult {
       border-radius: 3px 3px 7px 7px;
     }
     .result-item:focus-within {
-      box-shadow: 0 0 0 2px inset var(--cerulean);
+      box-shadow: 0 0 0 3px inset var(--cerulean);
       outline: none;
     }
     .result-item:has(input[type='checkbox']:checked) {
@@ -281,6 +314,9 @@ export default function getStyles(): CSSResult {
         background: var(--charcoal);
         border-color: var(--dark-grey);
       }
+      #results-container.positionAbove {
+        border-top: 5px solid var(--dark-grey);
+      }
 
       #search-label {
         border-color: var(--dark-grey);
@@ -331,6 +367,13 @@ export default function getStyles(): CSSResult {
       .result-item {
         border-color: black;
       }
+      .result-item:focus-within {
+        box-shadow: 0 0 0 3px inset var(--cool-sky);
+        outline: none;
+      }
+      .result-item:has(input[type='checkbox']:checked) {
+        background: var(--cerulean);
+      }
       .result-cell-key {
         color: var(--thistle);
       }
@@ -339,6 +382,33 @@ export default function getStyles(): CSSResult {
       }
       .highlight {
         color: var(--charcoal);
+      }
+
+      #select-all-button,
+      #selection-submit-button {
+        background: var(--cool-sky);
+        border: 3px solid var(--cerulean);
+      }
+      #select-all-button:hover,
+      #selection-submit-button:hover {
+        background: var(--cool-sky--light);
+      }
+    }
+
+    @media screen and (max-width: 599px) {
+      .result-cell {
+        flex: 1 1 50%;
+        padding-bottom: 5px;
+      }
+      #selected-records-detail {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 399px) {
+      .result-cell {
+        flex: 1 1 100%;
+        padding-bottom: 5px;
       }
     }
   `;

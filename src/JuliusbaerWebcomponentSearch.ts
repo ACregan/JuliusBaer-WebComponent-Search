@@ -246,6 +246,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     this.textInput = inputEl.value;
     this.selectedResults = [];
     if (inputEl.value.length > 1) {
+      this.determineResultsContainerPosition();
       this.submitSearch(this.textInput);
     } else {
       this.result = [];
@@ -260,7 +261,7 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
   // further if time permits.
   keyboardNav(e: KeyboardEvent, selectedId: number) {
     if (e.code === 'Space') {
-      e.preventDefault();
+      e.preventDefault(); // Scroll jank fix, accommodated by next line
       this.toggleSelectedResult(selectedId);
     }
   }
@@ -288,7 +289,8 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     const arrayOfSelectedItems = this.data.filter(item =>
       results.includes(item.id),
     );
-    const newEvent = new CustomEvent<Array<SearchItem>>(eventName, {
+    const validEventName = eventName.trim();
+    const newEvent = new CustomEvent<Array<SearchItem>>(validEventName, {
       detail: arrayOfSelectedItems,
     });
     window.dispatchEvent(newEvent);
@@ -322,15 +324,15 @@ export class JuliusbaerWebcomponentSearch extends LitElement {
     if (this.areMandatoryAttributesPresent() === false) {
       return html`<p id="attributesWarning">
         <span>
-          WARNING: Mandatory Attributes Are Missing. Have you included a 'name'
-          attribute and a 'data' attribute when using
+          WARNING: <u>Mandatory Attributes Are Missing.</u> Have you included a
+          'name' attribute and a 'url' attribute when using
           &lt;juliusbaer-webcomponent-search&gt;
         </span>
       </p>`;
     }
 
     return html`
-      <form id="root-container">
+      <form id="root-container" aria-expanded=${this.result.length > 0}>
         <div id="search-container">
           ${this.label.length > 0
             ? html`<label id="search-label" for="search-input"
