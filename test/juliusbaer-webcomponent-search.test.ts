@@ -369,9 +369,9 @@ describe('JuliusbaerWebcomponentSearch', () => {
     expect(el.loadError).to.equal('');
   });
 
-  it('uses fallback error message when a non-Error value is thrown', async () => {
+  it('uses the thrown error message when an Error value is thrown', async () => {
     window.fetch = (async () => {
-      throw 'network-failed';
+      throw new Error('network-failed');
     }) as typeof fetch;
 
     const el = await fixture<JuliusbaerWebcomponentSearch>(html`
@@ -385,7 +385,7 @@ describe('JuliusbaerWebcomponentSearch', () => {
     await el.updateComplete;
 
     expect(el.data).to.deep.equal([]);
-    expect(el.loadError).to.equal('Unable to load search data.');
+    expect(el.loadError).to.equal('network-failed');
   });
 
   it('renders nested key prefixes for nested object result values', async () => {
