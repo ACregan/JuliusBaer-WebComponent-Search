@@ -104,6 +104,25 @@ The output of this will be placed in the `dist` folder at the project root folde
 
 ---
 
+## Deploy to Vercel
+
+To deploy the demo to Vercel, run:
+
+```bash
+npm run deploy:vercel
+```
+
+This command:
+
+- builds the project,
+- creates a temporary deployment folder at `.vercel-deploy`,
+- stages `demo/index.html` and `dist/` assets for static hosting,
+- deploys to Vercel production using the Vercel CLI.
+
+Note: the first time you run this, `npx vercel` may prompt you to log in and link the project.
+
+---
+
 ## Usage
 
 ```html
