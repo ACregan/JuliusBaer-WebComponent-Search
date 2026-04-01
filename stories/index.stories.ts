@@ -76,11 +76,7 @@ EmptyData.args = {
   url: '',
 };
 
-// export const LargeDataset = Template.bind({});
-// LargeDataset.args = {
-//   data: Array.from({ length: 100 }, (_, i) => ({
-//     id: i,
-//     name: `Item ${i}`,
-//     role: `Role ${i}`,
-//   })),
-// };
+export const LargeDataset = Template.bind({});
+LargeDataset.args = {
+  url: 'https://microsoftedge.github.io/Demos/json-dummy-data/1MB-min.json',
+};
